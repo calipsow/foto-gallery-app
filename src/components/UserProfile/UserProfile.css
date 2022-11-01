@@ -1,0 +1,116 @@
+.user-profile-header{
+    width: 100%;
+    height: auto;
+    position: relative;
+    display: flex;
+    background-color: #000;
+    flex-direction: column;
+    align-items: flex-start;    
+    padding-top: 20px; 
+}
+.user-profile-image-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: 20px;
+    align-self: flex-start;
+}
+.profile-info-container-header{
+    display: flex;
+    color: #fff;
+    flex-direction: column;
+    padding-left: 25px;
+    justify-content: space-around;
+    align-items: left;
+    word-wrap: break-word; 
+    padding-right: 100px;
+}
+.profile-username-header{
+    color: #fff;
+    font-size: 1.5em;
+    margin-left: 30px;
+}
+.code-tags{
+    border: 1px solid white;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #000;
+    margin-right: 5px;
+    cursor: pointer;     
+    font-weight: 700;
+    border-radius: 2px;
+    display: inline-block;
+    font-size: 14px;
+    line-height: 26px;
+    padding-left: 8px;
+    padding-right: 8px;
+    text-decoration: none;
+    text-transform: capitalize;
+    margin-top: 5px;
+    transition: all .1s ease-in-out;
+}
+.user-profile-main-container{
+    width: 100%;
+    height: 500px;
+    background-color: rgb(119, 82, 35);
+}
+.user-profile-image-container img{
+    margin-left: 0;
+}
+.user-profile-menu-item{
+    width: auto;
+    height: 50px;
+    border: 1px solid black;
+    display: flex;
+    position: relative;
+}
+.user-profile-menu-ul{
+    text-decoration: none;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin-left: -20px;
+}
+.user-profile-menu-li{
+    margin-left: 20px; margin-right: 20px;
+    text-decoration: none;
+    list-style: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 417px){
+    .profile-info-container-header{
+        padding-right: 25px;
+    }
+    .profile-info-interesets{
+        display: none;
+    }
+    .user-profile-menu-li{
+        margin-left: 5px; margin-right: 5px;
+        font-size: 1rem;
+    }
+}
+
+@media only screen and (max-width: 300px){
+    .user-profile-image-container{
+        flex-direction: column;
+        padding-left: 5px;
+
+        margin-left: -5px;
+    }
+    .user-profile-image-container img{
+        margin-left: 10px;
+    }
+    .user-profile-header{
+        padding-left: 0;
+    }
+    .profile-username-header{
+        color: #fff;
+        font-size: 1.5em;
+        
+    }
+}
