@@ -12,7 +12,7 @@ class UserProfileClass extends React.Component {
         }
         this.data = null;       
         this.tags = []
-
+        this.handleViewChange = this.handleViewChange.bind(this)
     }
     getUserProfile = async () => {
         console.log(this.props.user_id)
@@ -42,7 +42,21 @@ class UserProfileClass extends React.Component {
         const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
         return s4() + s4() + '-' + s4() + '-' + new Date().getTime();
     }
+    handleViewChange = (e) => {
+        e.preventDefault();
 
+        if(e.target.id === "Photos-List-Item" && !this.state.PhotoView ){
+        
+            this.setState({PhotoView: true, LikedPhotos: false, CollectionView: false})
+        
+        }else if(e.target.id === "Liked-List-Item" && !this.state.LikedPhotos ){
+            this.setState({PhotoView: false, LikedPhotos: true, CollectionView: false})
+        
+        }else if(e.target.id === "Collection-List-Item" && !this.state.CollectionView ){
+
+            this.setState({PhotoView: false, LikedPhotos: false, CollectionView: true})
+        }
+    }
     render(){
         return (
             <React.Fragment>
@@ -60,7 +74,7 @@ class UserProfileClass extends React.Component {
                             >
                             </img>
                             <label htmmlFor={this.data.id} className="profile-username-header">                            
-                                { this.data.badge.slug === 'verified' ? <i className="fas fa-check-circle">{'      '+ this.data.name}</i> : this.data.name  }
+                                { this.data.badge === null ? this.data.name : this.data.badge.slug === 'verified' ? <i className="fas fa-check-circle">{'      '+ this.data.name}</i> : this.data.name  }
                             </label>
                         </div>
                         <div className="profile-info-container-header">
@@ -80,9 +94,18 @@ class UserProfileClass extends React.Component {
                     <div className="user-profile-main-container">
                         <div className="user-profile-menu-item">
                             <ul className="user-profile-menu-ul">
-                                <li className="user-profile-menu-li">Photos</li>
-                                <li className="user-profile-menu-li">Likes</li>
-                                <li className="user-profile-menu-li">Collections</li>
+                                <li className="user-profile-menu-li" style={this.state.PhotoView ? {color: 'white'}:{color: 'black'}}
+                                    id="Photos-List-Item"
+                                    onClick={ e => this.handleViewChange(e) }
+                                >Photos</li>
+                                <li className="user-profile-menu-li" style={this.state.LikedPhotos ? {color: 'white'}:{color: 'black'}}
+                                    id="Liked-List-Item"
+                                    onClick={ e => this.handleViewChange(e) }
+                                >Likes</li>
+                                <li className="user-profile-menu-li" style={this.state.CollectionView ? {color: 'white'}:{color: 'black'}}
+                                    id="Collection-List-Item"
+                                    onClick={ e => this.handleViewChange(e) }
+                                >Collections</li>
                             </ul>
                         </div>
                         {
@@ -107,7 +130,7 @@ class UserPhotos extends React.Component {
     render(){
         return(
             <section className="userPhotos-container-main picture-container">
-
+                ggggggggggggggggggggg
             </section>
         )
     }

@@ -103,7 +103,8 @@
         margin-left: -5px;
     }
     .user-profile-image-container img{
-        margin-left: 10px;
+        margin-left: 0;
+        margin-bottom: 10px;
     }
     .user-profile-header{
         padding-left: 0;
