@@ -1,6 +1,6 @@
 import React from 'react';
 import './UserPhotos.css';
-
+import Loader from './../../loader/Loader'
 
 export default class UserPhotos extends React.Component {
     constructor(props){
@@ -21,13 +21,25 @@ export default class UserPhotos extends React.Component {
         })
         this.setState({loading: false})
     }
-    createElementImage = ( photoUrl, likes ) => {
+    createElementImage = ( photoUrl, likes, dataSet ) => {
 
         return (
             <p key={this.generateKey()} style={{textAlign: 'center'}}>
                 <img className="rounded mx-auto d-block" src={photoUrl} alt="image" 
                 width={ 'auto' } height={'auto'} style={{margin: '20px'}}/>
                 <b>{likes+'    '}</b><i className="far fa-heart"></i>
+
+                <a className="btn-icons link-elem-icon"   
+                        onClick={ e => this.handleDownloadEvent(e) }
+                        href={dataSet.urls.small_s3}
+                        target="_blank"
+                        download                                                              
+                        style={{cursor:'pointer', marginLeft: '50px'}}
+                    >
+                        <i className="fas fa-cloud-download-alt" id={dataSet.urls.small_s3} style={{color: 'white'}}></i>
+
+                     
+                </a> 
             </p>
         )
     }
@@ -45,11 +57,41 @@ export default class UserPhotos extends React.Component {
         .catch(err => {console.log(err); return [] } )
     }
 
+     
+    handleDownloadEvent = (e) => {
+        e.preventDefault();
+        const key = this.generateKey();
+        console.log(e.target.id)
+        console.log(e.target.id)
+
+        fetch(e.target.id, {
+            method: "GET",
+            headers: {
+                'cors':'no-cors'
+            }
+        })
+        .then(response => {
+            response.arrayBuffer().then(function(buffer) {
+            const url = window.URL.createObjectURL(new Blob([buffer]));
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", key+'.jpeg'); //or any other extension
+            document.body.appendChild(link);
+            link.click();
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        });
+        
+    }
+
+
     render() {
         return(
             <React.Fragment>
             {
-                this.state.loading ? <div>Loading...</div> : <div style={{justifyContent: 'space-around'}} className="picture-container-main">{this.elements}</div> 
+                <div style={{justifyContent: 'space-around'}} className="picture-container-main">{this.state.loading ? <Loader /> :  this.elements}</div> 
             }
             </React.Fragment>
             

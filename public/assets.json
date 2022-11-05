@@ -1,0 +1,13 @@
+{
+    "data": {
+        "pictures":[
+            {
+                "nature":{
+                    "small":"https://unsplash.com/photos/78A265wPiO4/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8Mnx8bmF0dXJlfGVufDB8fHx8MTY2NzYyNjQwMQ&force=true&w=640",
+                    "medium":"https://unsplash.com/photos/78A265wPiO4/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8Mnx8bmF0dXJlfGVufDB8fHx8MTY2NzYyNjQwMQ&force=true&w=1920",
+                    "large":"https://unsplash.com/photos/78A265wPiO4/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8Mnx8bmF0dXJlfGVufDB8fHx8MTY2NzYyNjQwMQ&force=true&w=2400"
+                }
+            }
+        ]
+    }
+}

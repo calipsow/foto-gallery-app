@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter as Router ,Routes, Route} from 'react-router-dom';
 import UserProfile from './components/UserProfile/UserProfilePage';
+import SearchSite from './components/SearchSite/SearchSite';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -13,6 +14,7 @@ root.render(
       <Routes>
         <Route path={'/'} element={<App />} />
         <Route path={'user-profile/:user_id'} element={<UserProfile />} />
+        <Route path={'search/query/:query'}  element={<SearchSite />} />
       </Routes>
     </Router>
   </React.StrictMode>

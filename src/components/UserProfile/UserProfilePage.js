@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams } from 'react-router-dom'; 
+import { useParams, Link } from 'react-router-dom'; 
 import './UserProfile.css'
 import NavBar from '../Navbar/Navbar';
 import CollectionRend from './Collections/CollectionRender';
@@ -24,7 +24,7 @@ class UserProfileClass extends React.Component {
         .catch(err => console.log(err) )
     }
     async componentDidMount(){
-        
+        window.scrollTo(0, 0)
         this.data = await this.getUserProfile(this.user_id)
         this.createTags()
         this.setState({loading: false})
@@ -35,7 +35,10 @@ class UserProfileClass extends React.Component {
         
         this.data.tags.custom.forEach(tag => {
             this.tags.push(
-                <code key={this.generateKey()} className={'code-tags'}>{tag.title}</code> 
+
+                <Link to={`/search/query/${tag.title}`}>
+                    <code key={this.generateKey()} className={'code-tags'}>{tag.title}</code>
+                </Link> 
             )
         })
         
@@ -96,15 +99,15 @@ class UserProfileClass extends React.Component {
                     <div className="user-profile-main-container">
                         <div className="user-profile-menu-item">
                             <ul className="user-profile-menu-ul list-group list-group-flush">
-                                <li className="list-group-item user-profile-menu-li" style={this.state.PhotoView ? {color: 'white', backgroundColor: 'transparent'}:{color: 'black', backgroundColor: 'transparent'}}
+                                <li className="list-group-item user-profile-menu-li" style={this.state.PhotoView ? {color: 'gray', backgroundColor: 'transparent'}:{color: 'black', backgroundColor: 'transparent'}}
                                     id="Photos-List-Item"
                                     onClick={ e => this.handleViewChange(e) }
                                 >Photos</li>
-                                <li className="list-group-item user-profile-menu-li" style={this.state.LikedPhotos ? {color: 'white', backgroundColor: 'transparent'}:{color: 'black', backgroundColor: 'transparent'}}
+                                <li className="list-group-item user-profile-menu-li" style={this.state.LikedPhotos ? {color: 'gray', backgroundColor: 'transparent'}:{color: 'black', backgroundColor: 'transparent'}}
                                     id="Liked-List-Item"
                                     onClick={ e => this.handleViewChange(e) }
                                 >Likes</li>
-                                <li className="list-group-item user-profile-menu-li" style={this.state.CollectionView ? {color: 'white', backgroundColor: 'transparent'}:{color: 'black', backgroundColor: 'transparent'}}
+                                <li className="list-group-item user-profile-menu-li" style={this.state.CollectionView ? {color: 'gray', backgroundColor: 'transparent'}:{color: 'black', backgroundColor: 'transparent'}}
                                     id="Collection-List-Item"
                                     onClick={ e => this.handleViewChange(e) }
                                 >Collections</li>
@@ -129,7 +132,7 @@ class UserProfileClass extends React.Component {
 export default function UserProfile () {
 
     const { user_id } = useParams()
-    console.log(user_id)
+
     return (
         <UserProfileClass user_id={user_id} />
     )

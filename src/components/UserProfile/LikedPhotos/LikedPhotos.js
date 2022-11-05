@@ -1,6 +1,6 @@
 import React from 'react';
 import './LikedPhotos.css'
-
+import Loader from '../../loader/Loader'
 
 export default class LikedPhotos extends React.Component {
     constructor(props){
@@ -16,7 +16,7 @@ export default class LikedPhotos extends React.Component {
         // console.log(this.data)
         this.data.forEach(dataSet => {
             this.elements.push(this.createElementImage(
-                dataSet.urls.small, dataSet.alt_description || 'image', dataSet.likes
+                dataSet.urls.small, dataSet.alt_description || 'image', dataSet.likes, dataSet
             ))
         })
         this.setState({loading: false})
@@ -29,12 +29,23 @@ export default class LikedPhotos extends React.Component {
         .catch(err => {console.error(err); return[]})
     }
 
-    createElementImage = (url, alt, likes) => {
+    createElementImage = (url, alt, likes, dataSet) => {
         const k = this.generateKey()
         return(
             <p key={k} style={{textAlign: 'center', margin: '15px'}}>
                 <img id={k} className="rounded mx-auto d-block img-fluid" alt={alt} src={url} />
                 <legend htmmlFor={k}><b>{likes+'    '}</b><i className="far fa-heart"></i></legend>
+                <a className="btn-icons link-elem-icon"     
+                        onClick={ e => this.handleDownloadEvent(e) }
+                        href={dataSet.urls.small_s3}
+                        target="_blank"
+                        download                                                              
+                        style={{cursor:'pointer'}}
+                    >
+                        <i className="fas fa-cloud-download-alt" id={dataSet.urls.small_s3} style={{color: 'white'}}></i>
+
+                     
+                </a> 
             </p>
         )
     }
@@ -43,12 +54,40 @@ export default class LikedPhotos extends React.Component {
         return s4() + s4() + '-' + s4() + '-' + new Date().getTime();
     }
 
+ 
+    handleDownloadEvent = (e) => {
+        e.preventDefault();
+        const key = this.generateKey();
+        console.log(e.target.id)
+        console.log(e.target.id)
+
+        fetch(e.target.id, {
+            method: "GET",
+            headers: {
+                'cors':'no-cors'
+            }
+        })
+        .then(response => {
+            response.arrayBuffer().then(function(buffer) {
+            const url = window.URL.createObjectURL(new Blob([buffer]));
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", key+'.jpeg'); //or any other extension
+            document.body.appendChild(link);
+            link.click();
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        });
+        
+    }
 
     render(){
         return(
             <React.Fragment>
             {
-                this.state.loading ? <div>Loading...</div> : <div style={{marginTop: '20px', justifyContent: 'center'}} className="d-flex align-content-around flex-wrap">{this.elements}</div>
+                <div style={{paddingTop: '20px', justifyContent: 'center', backgroundColor: '#e1e2e2'}} className="d-flex align-content-around flex-wrap">{this.state.loading ? <Loader /> : this.elements}</div>
             }
             </React.Fragment>
         ) 

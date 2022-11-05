@@ -1,7 +1,7 @@
 import React from 'react';
 import './CollectionRend.css'
 import axios from 'axios';
-
+import Loader from '../../loader/Loader'
 export default class CollectionRend extends React.Component {
     constructor(props){
         super(props);
@@ -93,11 +93,13 @@ export default class CollectionRend extends React.Component {
         return (
             <React.Fragment>
                 {
-                    this.state.loading && !this.state.collectionAvailable ? <div>Loading...</div> 
+                    <div className="picture-container-main collection-con">{
+                        this.state.loading && !this.state.collectionAvailable ? <Loader /> 
                     
-                    : !this.state.collectionAvailable && !this.state.loading ? <div>No collection available</div>
-
-                    : <div className="picture-container-main collection-con">{this.elements}</div>
+                        : !this.state.collectionAvailable && !this.state.loading ? <div>No collection available</div>
+    
+                        : this.elements    
+                    }</div>
                 }
             </React.Fragment>
         )
