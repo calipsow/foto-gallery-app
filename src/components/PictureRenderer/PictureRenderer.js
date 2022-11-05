@@ -34,6 +34,7 @@ export default class PictureRend extends React.Component {
             srcSet += dataSet.urls[key] + key === 'thumb' ? dataSet.urls[key]+' 200w, ' : key === 'small' ? dataSet.urls[key]+' 400w, ' : key === 'regular' ? dataSet.urls[key]+' 1080w, ' : key === 'full' ? dataSet.urls[key]+' 2080w, ' : '' 
         })
         console.log(srcSet)
+        
         return (
             <div key={uid} className="container-item">
                 <div className="container-user-info">

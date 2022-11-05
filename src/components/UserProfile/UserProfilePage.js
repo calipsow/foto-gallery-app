@@ -2,7 +2,8 @@ import React from 'react';
 import { useParams } from 'react-router-dom'; 
 import './UserProfile.css'
 import NavBar from '../Navbar/Navbar';
-
+import CollectionRend from './Collections/CollectionRender';
+import UserPhotos from './UserPhotos/UserPhotos';
 class UserProfileClass extends React.Component {
     constructor(props) {
         super(props);
@@ -109,7 +110,7 @@ class UserProfileClass extends React.Component {
                             </ul>
                         </div>
                         {
-                            this.state.PhotoView ? <UserPhotos /> : this.state.LikedPhotos ? <></> : this.state.CollectionView ? <></> : <UserPhotos />
+                            this.state.PhotoView ? <UserPhotos username={this.data.username}/> : this.state.LikedPhotos ? <></> : this.state.CollectionView ? <CollectionRend username={this.data.username}/> : <UserPhotos />
                         }
                     </div>
                 </>
@@ -119,21 +120,6 @@ class UserProfileClass extends React.Component {
         )
     }
 
-}
-
-class UserPhotos extends React.Component {
-    constructor(props){
-        super(props);
-
-    }
-
-    render(){
-        return(
-            <section className="userPhotos-container-main picture-container">
-                ggggggggggggggggggggg
-            </section>
-        )
-    }
 }
 
 
