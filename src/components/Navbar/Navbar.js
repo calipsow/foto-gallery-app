@@ -1,60 +1,78 @@
-import React from 'react';
+import React  from 'react';
 import './NavBar.css';
-import { Link } from 'react-router-dom'
-
+import { Link, useParams } from 'react-router-dom'
+import 'jquery/dist/jquery.min.js'; // Have to install and import jQuery because of bootstrap modal's dependency
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 export default class NavBar extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            menu_closed: true
-        }
-    }
-    handleClick = () => {
-        if(this.state.menu_closed){
-            this.setState({menu_closed: false})
-        }else{
-            this.setState({menu_closed: true})
-        }
-    }
     render() {
-        return(
-            <>
-            <header className="navbar-fixed">
-                <nav className="navbar-header">
-                    <a className="nav-menu-link" href={'#'}>
-                        <div className="nav-container"
-                            onClick={ this.handleClick }
-                        >
-                            <i className='fas fa-bars' style={{color: 'black', fontSize: '30px'}}></i>
-                        </div>
-                    </a>
-                    <Link to={'/'} className="nav-menu-link nav-home-link">
-                        <div className="nav-container">
-                            Home
-                        </div>
-                    </Link>
-                    <a className="nav-menu-link">
-                        <div className="nav-container">
-                            <div className="nav-container-search">
-                                <form className="form-search">
-                                    <input className="search-bar" placeholder="Search" type={'text'} />
-                                    <button className="btn-search-enter"><i className='fas fa-search'></i></button>
-                                </form>
-                            </div>
-                        </div>
-                    </a>
-                </nav> 
-            </header>
-            <div className={ this.state.menu_closed ?  "header-menu-container" : "header-menu-container open-container" }>
-                <ul className={this.state.menu_closed ? "nav-menu-list display-none" : "nav-menu-list" }>
-                    <li className={ this.state.menu_closed ? "nav-menu-item display-none" : "nav-menu-item"}>Nature</li>
-                    <li className={ this.state.menu_closed ? "nav-menu-item display-none" : "nav-menu-item"}>Business</li>
-                    <li className={ this.state.menu_closed ? "nav-menu-item display-none" : "nav-menu-item"}>Abstract</li>
-                </ul>
-            </div>
-            </>
+        
+        return (<Navbar_V2 />)
+        
+    }
+}
 
+
+class NavBarV2 extends React.Component{
+    constructor(props){
+        super(props);
+        this.state={ showNav: false }
+        this.toggleNav = this.toggleNav.bind(this);
+    }
+    toggleNav() {
+        this.setState({ 
+            showNav: !this.state.showNav
+        })
+    }
+
+    render(){
+        return (
+            <>
+            <nav style={{paddingLeft: '15px', paddingRight: '15px'}} className="navbar navbar-expand-lg navbar-dark bg-dark">
+            <Link className="navbar-brand" to={"/"}>
+                <i className="fas fa-home"  style={{color: 'white'}}></i>
+            </Link>
+            <button  onClick={this.toggleNav} className="navbar-toggler" type="button" data-togle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span className="navbar-toggler-icon"></span>
+            </button>
+
+            <div className={(this.state.showNav ? 'show' : '') + ' collapse navbar-collapse'} id="navbarSupportedContent">
+                <ul className="navbar-nav mr-auto">
+                <li className="nav-item active">
+                    <Link className="nav-link" to={"/"}  style={{color: 'white'}}>Home <span className="sr-only">(current)</span></Link>
+                </li>
+
+                <li className="nav-item dropdown">
+                    <a  style={{color: 'white'}} className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Menu
+                    </a>
+                    <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <Link className="dropdown-item" to={'/'}>Startseite</Link>
+                    <a className="dropdown-item" href="#">Impressum</a>
+                    <div className="dropdown-divider"></div>
+                    <a className="dropdown-item" href="#">Kontakt</a>
+                    </div>
+                </li>
+                <li className="nav-item">
+                    <a  style={{color: 'rgba(170,170,170,.5)'}} className="nav-link disabled" href="#">{ !this.props.user_id ? '' : this.props.user_id}</a>
+                </li>
+                </ul>
+                <form className="form-inline my-2 my-lg-0">
+                <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
+                <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
+            </div>
+            </nav>
+            </>
         )
     }
+}
+
+const Navbar_V2 = () => {
+    let { user_id } = useParams()
+
+    return (
+        <NavBarV2 user_id={user_id} />
+    )
 }

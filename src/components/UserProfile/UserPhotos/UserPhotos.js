@@ -13,17 +13,22 @@ export default class UserPhotos extends React.Component {
     }
     async componentDidMount(){
         this.data = await this.fetchUserPhotos()
-        console.log(this.data, 'aaaaaaaaaaaaaa')
+        // console.log(this.data, 'aaaaaaaaaaaaaa')
         this.data.forEach( data => {
             this.elements.push(
-                this.createElementImage(data.urls.small)
+                this.createElementImage(data.urls.small, data.likes, data)
             )
         })
         this.setState({loading: false})
     }
-    createElementImage = ( photoUrl ) => {
+    createElementImage = ( photoUrl, likes ) => {
+
         return (
-            <img key={this.generateKey()} src={photoUrl} alt="image" width={'400px'} height={'auto'} style={{margin: '20px'}}/>
+            <p key={this.generateKey()} style={{textAlign: 'center'}}>
+                <img className="rounded mx-auto d-block" src={photoUrl} alt="image" 
+                width={ 'auto' } height={'auto'} style={{margin: '20px'}}/>
+                <b>{likes+'    '}</b><i className="far fa-heart"></i>
+            </p>
         )
     }
 
@@ -44,7 +49,7 @@ export default class UserPhotos extends React.Component {
         return(
             <React.Fragment>
             {
-                this.state.loading ? <div>Loading...</div> : <div className="picture-container-main">{this.elements}</div> 
+                this.state.loading ? <div>Loading...</div> : <div style={{justifyContent: 'space-around'}} className="picture-container-main">{this.elements}</div> 
             }
             </React.Fragment>
             

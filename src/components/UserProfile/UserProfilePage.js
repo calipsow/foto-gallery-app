@@ -4,6 +4,7 @@ import './UserProfile.css'
 import NavBar from '../Navbar/Navbar';
 import CollectionRend from './Collections/CollectionRender';
 import UserPhotos from './UserPhotos/UserPhotos';
+import LikedPhotos from './LikedPhotos/LikedPhotos';
 class UserProfileClass extends React.Component {
     constructor(props) {
         super(props);
@@ -94,23 +95,23 @@ class UserProfileClass extends React.Component {
 
                     <div className="user-profile-main-container">
                         <div className="user-profile-menu-item">
-                            <ul className="user-profile-menu-ul">
-                                <li className="user-profile-menu-li" style={this.state.PhotoView ? {color: 'white'}:{color: 'black'}}
+                            <ul className="user-profile-menu-ul list-group list-group-flush">
+                                <li className="list-group-item user-profile-menu-li" style={this.state.PhotoView ? {color: 'white', backgroundColor: 'transparent'}:{color: 'black', backgroundColor: 'transparent'}}
                                     id="Photos-List-Item"
                                     onClick={ e => this.handleViewChange(e) }
                                 >Photos</li>
-                                <li className="user-profile-menu-li" style={this.state.LikedPhotos ? {color: 'white'}:{color: 'black'}}
+                                <li className="list-group-item user-profile-menu-li" style={this.state.LikedPhotos ? {color: 'white', backgroundColor: 'transparent'}:{color: 'black', backgroundColor: 'transparent'}}
                                     id="Liked-List-Item"
                                     onClick={ e => this.handleViewChange(e) }
                                 >Likes</li>
-                                <li className="user-profile-menu-li" style={this.state.CollectionView ? {color: 'white'}:{color: 'black'}}
+                                <li className="list-group-item user-profile-menu-li" style={this.state.CollectionView ? {color: 'white', backgroundColor: 'transparent'}:{color: 'black', backgroundColor: 'transparent'}}
                                     id="Collection-List-Item"
                                     onClick={ e => this.handleViewChange(e) }
                                 >Collections</li>
                             </ul>
                         </div>
                         {
-                            this.state.PhotoView ? <UserPhotos username={this.data.username}/> : this.state.LikedPhotos ? <></> : this.state.CollectionView ? <CollectionRend username={this.data.username}/> : <UserPhotos />
+                            this.state.PhotoView ? <UserPhotos username={this.data.username}/> : this.state.LikedPhotos ? <LikedPhotos username={this.data.username}></LikedPhotos> : this.state.CollectionView ? <CollectionRend username={this.data.username}/> : <UserPhotos />
                         }
                     </div>
                 </>

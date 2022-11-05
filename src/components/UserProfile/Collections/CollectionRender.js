@@ -16,7 +16,7 @@ export default class CollectionRend extends React.Component {
     }
 
     fetchCollection = async () => {
-        console.log(this.props.username)
+        // console.log(this.props.username)
         return await axios.get(`http://localhost:3588/api/user-lookup/collections?userName=deepufashion`,{'cors':'no-cors'})
         .then(response => {console.log(response.data); return response.data})
         .catch(err => {console.log(err); return []})
@@ -26,7 +26,7 @@ export default class CollectionRend extends React.Component {
         if(!this.firstReq) return;
         this.firstReq = false;
         this.data = await this.fetchCollection()
-        console.log(this.data.response, this.data.response.length)
+        // console.log(this.data.response, this.data.response.length)
 
         if(this.data.response.length === 0 ){
             this.setState({collectionAvailable: true, loading: false})
@@ -44,7 +44,7 @@ export default class CollectionRend extends React.Component {
                 this.images.push(
                     
                     this.createElementPreview(
-                        previewPhotos.urls.small
+                        previewPhotos.urls.thumb
                         , response.description || 'photo collection'
                     )
                 
@@ -53,7 +53,7 @@ export default class CollectionRend extends React.Component {
             this.elements.push(this.createElementDivCont(this.images))
             this.images = [];
         })
-        console.log(this.elements)
+        // console.log(this.elements)
         this.setState({loading: false, collectionAvailable: true})
         
     }
@@ -61,11 +61,12 @@ export default class CollectionRend extends React.Component {
     createElementPreview = (imageSrc, alt) => {
         return(
             <img
+                className='rounded'
                 key={this.generateKey()} 
                 src={imageSrc}
                 alt={alt}
-                width={'auto'}
-                height={'auto'}
+                width={'50%'}
+                height={'50%'}
             ></img>
         )
     }
@@ -76,7 +77,7 @@ export default class CollectionRend extends React.Component {
         return (
             <div 
             key={this.generateKey()}
-            className="image-container collection-image-con">
+            className="image-container collection-image-con container">
                 <div className="image-container-inner-top">{ lastTwo }</div>
                 <div className="image-container-inner-bottom">{ firstTwo }</div>
             </div>

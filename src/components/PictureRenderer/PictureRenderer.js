@@ -14,7 +14,7 @@ export default class PictureRend extends React.Component {
     }
     async componentDidMount(){
         this.data = await this.fetchData();
-        console.log(this.data);
+        // console.log(this.data);
         this.data.forEach( dataSet => {
             this.elements.push(
                 this.createElement(dataSet)
@@ -33,7 +33,7 @@ export default class PictureRend extends React.Component {
             if(key === 'raw' || key === 'small_s3') return;
             srcSet += dataSet.urls[key] + key === 'thumb' ? dataSet.urls[key]+' 200w, ' : key === 'small' ? dataSet.urls[key]+' 400w, ' : key === 'regular' ? dataSet.urls[key]+' 1080w, ' : key === 'full' ? dataSet.urls[key]+' 2080w, ' : '' 
         })
-        console.log(srcSet)
+        // console.log(srcSet)
         
         return (
             <div key={uid} className="container-item">
@@ -62,7 +62,7 @@ export default class PictureRend extends React.Component {
                     height={'100%'}
                     sizes={'(min-width: 1335px) 416px, (min-width: 992px) calc(calc(100vw - 72px) / 3), (min-width: 768px) calc(calc(100vw - 48px) / 2), 100vw'}
                     srcSet={srcSet}
-                    className="img-generatet"
+                    className="img-generatet rounded mx-auto d-block"
                     id={uid}
                     src={ dataSet.urls.small.split('&').includes('w=400') ? dataSet.urls.regular : dataSet.urls.small }
                     alt={ dataSet.user.name }                
