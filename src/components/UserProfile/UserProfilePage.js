@@ -5,6 +5,7 @@ import NavBar from '../Navbar/Navbar';
 import Loader from './../loader/Loader';
 import UserPhotos from './UserPhotos/UserPhotos';
 import LikedPhotos from './LikedPhotos/LikedPhotos';
+import FooterComponent from './../footer/footer';
 class UserProfileClass extends React.Component {
     constructor(props) {
         super(props);
@@ -61,7 +62,7 @@ class UserProfileClass extends React.Component {
     }
     render(){
         return (
-            <React.Fragment>
+            <div>
                 <NavBar />
                 { !this.state.loading ?
                 <> 
@@ -113,7 +114,8 @@ class UserProfileClass extends React.Component {
                 </>
                 : <Loader></Loader>
                 }
-            </React.Fragment>
+                { !this.state.loading ? <FooterComponent /> : <></>}
+            </div>
         )
     }
 

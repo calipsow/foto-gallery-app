@@ -8,6 +8,7 @@ import NavBar from '../Navbar/Navbar';
 import { Link } from 'react-router-dom'
 import Loader from '../loader/Loader';
 import NoResults from './../assets/NoResults';
+import FooterComponent from '../footer/footer';
 
 export default function SearchSite(){
     let { query } = useParams();
@@ -48,7 +49,7 @@ class SearchSiteClass extends React.Component {
             return;
         }
         this.data.results.forEach(dataSet => {
-            this.temporarilyUpdate.url = dataSet.urls.full; this.temporarilyUpdate.alt = dataSet.alt_description; this.temporarilyUpdate.likes = dataSet.likes
+            this.temporarilyUpdate.url = dataSet.urls.regular; this.temporarilyUpdate.alt = dataSet.alt_description; this.temporarilyUpdate.likes = dataSet.likes
 
             this.elements.push(this.createElementImage(dataSet.urls.small, dataSet.alt_description || this.props.query, dataSet.likes, dataSet))
         })
@@ -172,17 +173,18 @@ class SearchSiteClass extends React.Component {
 
             <React.Fragment>
                 <NavBar />
+                <div class="card bg-dark text-white"style={{borderRadius:'0', minHeight: '500px'}}>
+                    <img class="card-img" src={this.temporarilyUpdate.url} alt={this.temporarilyUpdate.alt} />
+                    <div class="card-img-overlay" style={{borderRadius:'0'}}>
+                    <div class="jumbotron" style={{backgroundColor:'rgba(170,170,170,.2)', backdropFilter:'blur(2px)'}}>
+                            <h1 class="display-4">{ !this.state.loading ? this.props.query.toUpperCase().replace(/[-]/g, ' ') : '' }</h1>
 
-                <div className="header-container-main">
-                    <img 
-                    style={{position: 'relative', top: '0', left: '0', minHeight: '500px'}}
-                    src={this.temporarilyUpdate.url}
-                    alt={this.temporarilyUpdate.alt} width={"100%"} height={"auto"} ></img>
-                
-                    <h1 className="title-main" 
-                  
-                    >{ !this.state.loading ? this.props.query.toUpperCase().replace(/[-]/g, ' ') : '' }</h1>
+                                                    
+                            </div>
+
+                    </div>
                 </div>
+
 
                 <div style={{paddingTop: '20px', justifyContent: 'center', backgroundColor: '#e1e2e2'}} className="d-flex align-content-around flex-wrap">
                     {
@@ -196,6 +198,7 @@ class SearchSiteClass extends React.Component {
                     
                 </div>
                 { !this.state.loading && this.state.success === null || this.state.success ? this.loadMoreButton() : <></> }
+                { !this.state.loading ? <FooterComponent /> : <></>}
             </React.Fragment>
         )
     }

@@ -2,6 +2,7 @@ import React from 'react';
 import './PictureRend.css'
 import { Link } from 'react-router-dom'
 import Loader from '../loader/Loader';
+
 export default class PictureRend extends React.Component {
     constructor(props){
         super(props);
@@ -64,7 +65,8 @@ export default class PictureRend extends React.Component {
         // console.log(srcSet)
         
         return (
-            <div key={uid} className="container-item grid-item">
+            <React.Fragment key={uid}>
+            <div  className="container-item grid-item">
 
 
                 <div className="picture-container" >                
@@ -84,11 +86,12 @@ export default class PictureRend extends React.Component {
                 <div className="container-user-info">
                     <Link to={'/user-profile/'+dataSet.user.username} style={{textDecoration: 'none', cursor: 'pointer'}}>
                         <img
+                            
                             id={uid}
                             src={dataSet.user.profile_image.medium}
                             width={'56px'}
                             height={'56px'}
-                            style={{borderRadius: '100%', border:'none'}}
+                            style={{cursor: 'pointer', borderRadius: '100%', border:'none'}}
                         >                    
                         </img>
                         
@@ -119,12 +122,17 @@ export default class PictureRend extends React.Component {
 
                 </div>                    
                 </div>
-
+                
 
             </div>
+            
+            </React.Fragment>
         )
     }
  
+
+
+
     handleDownloadEvent = (e) => {
         e.preventDefault();
         const key = this.generateKey();
@@ -172,15 +180,20 @@ ttps://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=
     render() {
         return (
             <React.Fragment>
-                <div className="header-container-main">
-                    <img 
-                    // srcset={"https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=871&q=80 871w, https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80 1171w, https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80 1471w, https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1742&q=80 1742w, https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1771&q=80 1771w, https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2071&q=80 2071w, https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2342&q=80 2342w, https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2371&q=80 2371w, https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2560&q=80 2560w"} sizes={"(max-width: 767px) 100vw, (max-width: 903px) min(100%, 871px), (max-height: 756px) min(100%, 871px), (min-aspect-ratio: 2560/1705) calc((calc(100vh - 175px)) * 1.50147), calc(100vw - 32px)"} 
-                    alt="image" width={"100%"} height={"auto"} 
-                    src={' https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2560&q=80'}
-                    ></img>
-                
-                    <h1 className="title-main" >Unsplash Clone</h1>
-                </div>
+                <div class="card bg-dark text-white"style={{borderRadius:'0'}}>
+                    <img class="card-img" src={'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2560&q=80'} alt="Card image" />
+                    <div class="card-img-overlay" style={{borderRadius:'0'}}>
+                    <div class="jumbotron" style={{backgroundColor:'rgba(170,170,170,.2)', backdropFilter:'blur(2px)'}}>
+                            <h1 class="display-4">Callipson</h1>
+                            <hr class="my-4"/>
+                            <p class="lead" style={{fontSize:'1rem'}}>This Application is powered by Unsplash</p>
+                            
+                            
+                            </div>
+
+                    </div>
+                    </div>
+
 
                 <div className="picture-container-main">
                     

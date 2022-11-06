@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import NavBar from './components/Navbar/Navbar';
 import PictureRend from './components/PictureRenderer/PictureRenderer';
-
+import FooterComponent from './components/footer/footer';
 export default class App extends React.Component {
   constructor(props) { 
     super(props); 
@@ -15,10 +15,16 @@ export default class App extends React.Component {
 
   render() {  
     return(
-      <div className="app-container">
-          <NavBar />
-          <PictureRend />
-      </div>
+      <>
+        <NavBar />
+
+        <div className="app-container">
+            <PictureRend />
+            <FooterComponent />
+        </div>
+        
+
+      </>
     )
   }
 }

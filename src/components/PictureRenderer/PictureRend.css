@@ -17,6 +17,7 @@
     height: auto;
    
 }
+
 .title-main{
     position: absolute;
     top: 10%;
@@ -34,6 +35,14 @@
         left: 3%;
         color: #fff;
         font-size: 1.5rem;
+    }
+}
+@media only screen and (max-width: 350px){
+    .lead{
+        display: none !important;
+    }
+    .my-4{
+        display: none !important;
     }
 }
 @media only screen and (min-width: 1400px){
