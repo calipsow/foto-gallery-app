@@ -7,6 +7,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import NavBar from '../Navbar/Navbar';
 import { Link } from 'react-router-dom'
 import Loader from '../loader/Loader';
+import NoResults from './../assets/NoResults';
 
 export default function SearchSite(){
     let { query } = useParams();
@@ -28,15 +29,38 @@ class SearchSiteClass extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: true, success: null
+            loading: true, success: null, loadingPage: 1, elements: []
         }
-        this.loadPages = 0
+        this.loadPages = 1
         this.data = []
         this.temporarilyUpdate = {}
         this.elements = []
+        this.query = this.props.query
     }
+
+
     async componentDidMount(){
         window.scrollTo(0, 0)
+        this.data = await this.fetchDataQuery()
+ 
+        if(this.data.total === 0 ){
+            this.setState({loading: false, success: false})
+            return;
+        }
+        this.data.results.forEach(dataSet => {
+            this.temporarilyUpdate.url = dataSet.urls.full; this.temporarilyUpdate.alt = dataSet.alt_description; this.temporarilyUpdate.likes = dataSet.likes
+
+            this.elements.push(this.createElementImage(dataSet.urls.small, dataSet.alt_description || this.props.query, dataSet.likes, dataSet))
+        })
+        this.loadPages += 1
+        this.setState({loading: false, success: true, loadingPage: this.loadPages, elements: this.elements})
+    }
+
+    async componentDidUpdate(){
+        if( this.query === this.props.query ) return;
+        this.query = this.props.query 
+        this.setState({loading: true})
+        this.elements = [];
         this.data = await this.fetchDataQuery()
         console.log(this.data)
         if(this.data.total === 0 ){
@@ -49,11 +73,11 @@ class SearchSiteClass extends React.Component {
             this.elements.push(this.createElementImage(dataSet.urls.small, dataSet.alt_description || this.props.query, dataSet.likes, dataSet))
         })
         this.loadPages += 1
-        this.setState({loading: false, success: true})
+        this.setState({loading: false, success: true, loadingPage: this.loadPages, elements: this.elements})
     }
 
     fetchDataQuery = async () => {
-        return await fetch(`http://localhost:3588/api/search/photos?query=${this.props.query}`,{'cors':'no-cors'})
+        return await fetch(`http://localhost:3588/api/search/photos?query=${this.props.query}&pageCount=${this.loadPages.toString()}`,{'cors':'no-cors'})
         .then(response => response.json())
         .then(response  => response.response )
         .catch(error => [error] )
@@ -86,12 +110,39 @@ class SearchSiteClass extends React.Component {
             </p>
         )
     }
+
+    loadMoreButton = () => {
+
+        return (
+            <div style={{backgroundColor: 'transparent', width: '100%', height: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: 'auto'}}>
+
+                <button 
+                className={"btn btn-dark"} 
+                style={{marginBottom: '25px', marginTop: '25px'}}
+                onClick={e => this.handleLoadMore()}
+                >Load More</button>
+            </div>
+        )
+    }
+
+    handleLoadMore = async () => {
+        this.data = await this.fetchDataQuery()
+
+        if(this.data.total === 0 && this.state.success === null){
+            this.setState({loading: false, success: false})
+            return;
+        }
+        this.data.results.forEach(dataSet => {            
+
+            this.elements.push(this.createElementImage(dataSet.urls.small, dataSet.alt_description || this.props.query, dataSet.likes, dataSet))
+        })
+        this.loadPages += 1
+        this.setState({loadingPage: this.loadPages, elements: this.elements})
+    }
  
     handleDownloadEvent = (e) => {
         e.preventDefault();
-        const key = this.generateKey();
-        console.log(e.target.id)
-        console.log(e.target.id)
+        const key = this.generateKey();    
 
         fetch(e.target.id, {
             method: "GET",
@@ -124,19 +175,27 @@ class SearchSiteClass extends React.Component {
 
                 <div className="header-container-main">
                     <img 
+                    style={{position: 'relative', top: '0', left: '0', minHeight: '500px'}}
                     src={this.temporarilyUpdate.url}
                     alt={this.temporarilyUpdate.alt} width={"100%"} height={"auto"} ></img>
                 
-                    <h1 className="title-main">{this.props.query.toUpperCase()}</h1>
+                    <h1 className="title-main" 
+                  
+                    >{ !this.state.loading ? this.props.query.toUpperCase().replace(/[-]/g, ' ') : '' }</h1>
                 </div>
 
                 <div style={{paddingTop: '20px', justifyContent: 'center', backgroundColor: '#e1e2e2'}} className="d-flex align-content-around flex-wrap">
                     {
                         this.state.loading && this.state.success === null ? <Loader />
-                        : !this.state.success && !this.state.loading  ? <div>No Results</div> 
-                        : this.elements                
+                        : !this.state.success && !this.state.loading  ? <NoResults/> 
+
+                        : this.state.elements.map( elem => {
+                            return elem
+                        })
                     }
+                    
                 </div>
+                { !this.state.loading && this.state.success === null || this.state.success ? this.loadMoreButton() : <></> }
             </React.Fragment>
         )
     }

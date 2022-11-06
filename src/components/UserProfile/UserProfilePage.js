@@ -2,7 +2,7 @@ import React from 'react';
 import { useParams, Link } from 'react-router-dom'; 
 import './UserProfile.css'
 import NavBar from '../Navbar/Navbar';
-import CollectionRend from './Collections/CollectionRender';
+import Loader from './../loader/Loader';
 import UserPhotos from './UserPhotos/UserPhotos';
 import LikedPhotos from './LikedPhotos/LikedPhotos';
 class UserProfileClass extends React.Component {
@@ -10,7 +10,7 @@ class UserProfileClass extends React.Component {
         super(props);
         this.state = {
             loading: true,
-            PhotoView: true, CollectionView: false, LikedPhotos: false
+            PhotoView: true, LikedPhotos: false
         }
         this.data = null;       
         this.tags = []
@@ -57,9 +57,6 @@ class UserProfileClass extends React.Component {
         }else if(e.target.id === "Liked-List-Item" && !this.state.LikedPhotos ){
             this.setState({PhotoView: false, LikedPhotos: true, CollectionView: false})
         
-        }else if(e.target.id === "Collection-List-Item" && !this.state.CollectionView ){
-
-            this.setState({PhotoView: false, LikedPhotos: false, CollectionView: true})
         }
     }
     render(){
@@ -84,7 +81,7 @@ class UserProfileClass extends React.Component {
                         </div>
                         <div className="profile-info-container-header">
                             <p>{this.data.bio}</p>
-                            <p>Followers {this.data.followers_count}</p>
+                            <p>Followers <b>{this.data.followers_count}</b></p>
 
                             <p className="profile-info-interesets">
                                 
@@ -106,19 +103,15 @@ class UserProfileClass extends React.Component {
                                 <li className="list-group-item user-profile-menu-li" style={this.state.LikedPhotos ? {color: 'gray', backgroundColor: 'transparent'}:{color: 'black', backgroundColor: 'transparent'}}
                                     id="Liked-List-Item"
                                     onClick={ e => this.handleViewChange(e) }
-                                >Likes</li>
-                                <li className="list-group-item user-profile-menu-li" style={this.state.CollectionView ? {color: 'gray', backgroundColor: 'transparent'}:{color: 'black', backgroundColor: 'transparent'}}
-                                    id="Collection-List-Item"
-                                    onClick={ e => this.handleViewChange(e) }
-                                >Collections</li>
+                                >Liked Photos</li>
                             </ul>
                         </div>
                         {
-                            this.state.PhotoView ? <UserPhotos username={this.data.username}/> : this.state.LikedPhotos ? <LikedPhotos username={this.data.username}></LikedPhotos> : this.state.CollectionView ? <CollectionRend username={this.data.username}/> : <UserPhotos />
+                            this.state.PhotoView ? <UserPhotos username={this.data.username}/> : this.state.LikedPhotos ? <LikedPhotos username={this.data.username}></LikedPhotos> : <UserPhotos />
                         }
                     </div>
                 </>
-                : <></>
+                : <Loader></Loader>
                 }
             </React.Fragment>
         )

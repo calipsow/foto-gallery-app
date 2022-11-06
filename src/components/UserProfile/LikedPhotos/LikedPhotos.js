@@ -1,7 +1,7 @@
 import React from 'react';
 import './LikedPhotos.css'
 import Loader from '../../loader/Loader'
-
+import NoResults from './../../assets/NoResults';
 export default class LikedPhotos extends React.Component {
     constructor(props){
         super(props);
@@ -87,7 +87,7 @@ export default class LikedPhotos extends React.Component {
         return(
             <React.Fragment>
             {
-                <div style={{paddingTop: '20px', justifyContent: 'center', backgroundColor: '#e1e2e2'}} className="d-flex align-content-around flex-wrap">{this.state.loading ? <Loader /> : this.elements}</div>
+                <div style={{paddingTop: '20px', justifyContent: 'center', backgroundColor: '#e1e2e2'}} className="d-flex align-content-around flex-wrap">{this.state.loading ? <Loader /> : this.elements.length === 0 ? <NoResults /> : this.elements}</div>
             }
             </React.Fragment>
         ) 

@@ -7,8 +7,10 @@ export default class PictureRend extends React.Component {
         super(props);
         this.state = {
             elements: [],
-            loading: true
+            loading: true,
+            loadingPage: 0
         }
+        this.loadingPage = 0;
         this.data = []; this.elements = [];
         // this.handleDownloadEvent = this.handleDownloadEvent.bind(this);
     }
@@ -24,6 +26,30 @@ export default class PictureRend extends React.Component {
 
         this.setState({ elements: this.elements })
         
+    }
+    loadMoreButton = () => {
+
+        return (
+            <div style={{backgroundColor: 'transparent', width: '100%', height: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center', margin: 'auto'}}>
+
+                <button 
+                className={"btn btn-dark"} 
+                style={{marginBottom: '25px', marginTop: '25px'}}
+                onClick={e => this.handleLoadMore()}
+                >Load More</button>
+            </div>
+        )
+    }
+
+    handleLoadMore = async () => {
+        this.data = await this.fetchData()
+        console.log(this.data)
+        this.data.forEach(dataSet => {            
+
+            this.elements.push(this.createElement(dataSet))
+        })
+        this.loadingPage += 1
+        this.setState({loadingPage: this.loadPages, elements: this.elements})
     }
 
     createElement = (dataSet) => {
@@ -91,7 +117,7 @@ export default class PictureRend extends React.Component {
                     </a> 
                     }
 
-                </div>
+                </div>                    
                 </div>
 
 
@@ -134,7 +160,7 @@ export default class PictureRend extends React.Component {
     }
 
     fetchData = async () => {
-        return await fetch('http://localhost:3588/api/pictures-random',{method: 'GET',headers: {'Content-Type': 'application/json','cors':'no-cors'}})
+        return await fetch(`http://localhost:3588/api/pictures-random${this.loadingPage === 0 ? '' : '?pageCount='+this.loadingPage}`,{method: 'GET',headers: {'Content-Type': 'application/json','cors':'no-cors'}})
         .then(response =>  response.json() )
         .then(response =>  response.response )
         .catch(err => [err] )
@@ -147,17 +173,23 @@ ttps://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=
         return (
             <React.Fragment>
                 <div className="header-container-main">
-                    <img srcset={"https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=871&q=80 871w, https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80 1171w, https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80 1471w, https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1742&q=80 1742w, https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1771&q=80 1771w, https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2071&q=80 2071w, https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2342&q=80 2342w, https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2371&q=80 2371w, https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2560&q=80 2560w"} sizes={"(max-width: 767px) 100vw, (max-width: 903px) min(100%, 871px), (max-height: 756px) min(100%, 871px), (min-aspect-ratio: 2560/1705) calc((calc(100vh - 175px)) * 1.50147), calc(100vw - 32px)"} 
-                    alt="image" width={"100%"} height={"auto"} ></img>
+                    <img 
+                    // srcset={"https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=871&q=80 871w, https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80 1171w, https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80 1471w, https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1742&q=80 1742w, https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1771&q=80 1771w, https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2071&q=80 2071w, https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2342&q=80 2342w, https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2371&q=80 2371w, https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2560&q=80 2560w"} sizes={"(max-width: 767px) 100vw, (max-width: 903px) min(100%, 871px), (max-height: 756px) min(100%, 871px), (min-aspect-ratio: 2560/1705) calc((calc(100vh - 175px)) * 1.50147), calc(100vw - 32px)"} 
+                    alt="image" width={"100%"} height={"auto"} 
+                    src={' https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2560&q=80'}
+                    ></img>
                 
-                    <h1 className="title-main">Unsplash Clone</h1>
+                    <h1 className="title-main" >Unsplash Clone</h1>
                 </div>
 
                 <div className="picture-container-main">
                     
-                        { this.state.elements.length === 0 ? <Loader/> : this.state.elements  }
-            
+                        { this.state.elements.length === 0 ? <Loader/> : this.state.elements.map( elem => elem )  }
+
+                        
                 </div>
+                    { this.loadMoreButton() }
+               
             </React.Fragment>
         )
     }

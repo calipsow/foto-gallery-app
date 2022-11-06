@@ -1,7 +1,7 @@
 import React from 'react';
 import './UserPhotos.css';
 import Loader from './../../loader/Loader'
-
+import NoResults from './../../assets/NoResults';
 export default class UserPhotos extends React.Component {
     constructor(props){
         super(props);
@@ -91,7 +91,7 @@ export default class UserPhotos extends React.Component {
         return(
             <React.Fragment>
             {
-                <div style={{justifyContent: 'space-around'}} className="picture-container-main">{this.state.loading ? <Loader /> :  this.elements}</div> 
+                <div style={{justifyContent: 'space-around'}} className="picture-container-main">{this.state.loading ? <Loader /> :  this.elements.length === 0 ? <NoResults /> : this.elements}</div> 
             }
             </React.Fragment>
             

@@ -72,7 +72,6 @@
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    margin-left: -20px;
 }
 .user-profile-menu-li{
     margin-left: 20px; margin-right: 20px;

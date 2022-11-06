@@ -30,7 +30,7 @@ class NavBarV2 extends React.Component{
     }
     handleSearchEvent = (e) => {
         e.preventDefault();
-        this.queryString = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
+        this.queryString = e.target.value.replace(/[^a-zA-Z0-9\sÄÖÜüäö]/g, '');
         this.setState({queryStr: this.queryString})      
     }
 
@@ -82,9 +82,9 @@ class NavBarV2 extends React.Component{
 const Navigation = (prop) => {
 
     const [ queryStr, setQueryStr ] = useState(prop.query)
-    
+    console.log( queryStr )
     useEffect(()=>{
-        setQueryStr(prop.query)
+        setQueryStr(prop.query.replace(/[\s]/g, '-'))
     },[prop])
 
 
@@ -106,6 +106,7 @@ const Navigation = (prop) => {
 
 const Navbar_V2 = () => {
     let { user_id, query } = useParams()
+    if(!!query) query = query.replace(/[-]/g, ' ');
 
     return (
         <NavBarV2 user_id={ user_id || query || '' } />
