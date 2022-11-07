@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom'; 
 import './UserProfile.css'
 import NavBar from '../Navbar/Navbar';
@@ -6,12 +6,21 @@ import Loader from './../loader/Loader';
 import UserPhotos from './UserPhotos/UserPhotos';
 import LikedPhotos from './LikedPhotos/LikedPhotos';
 import FooterComponent from './../footer/footer';
+import { Line } from 'react-chartjs-2'
+import { 
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Legend    
+} from 'chart.js'
 class UserProfileClass extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             loading: true,
-            PhotoView: true, LikedPhotos: false
+            PhotoView: true, LikedPhotos: false, Statistics: false
         }
         this.data = null;       
         this.tags = []
@@ -53,11 +62,13 @@ class UserProfileClass extends React.Component {
 
         if(e.target.id === "Photos-List-Item" && !this.state.PhotoView ){
         
-            this.setState({PhotoView: true, LikedPhotos: false, CollectionView: false})
+            this.setState({PhotoView: true, LikedPhotos: false, Statistics: false})
         
         }else if(e.target.id === "Liked-List-Item" && !this.state.LikedPhotos ){
-            this.setState({PhotoView: false, LikedPhotos: true, CollectionView: false})
+            this.setState({PhotoView: false, LikedPhotos: true, Statistics: false})
         
+        }else if(e.target.id === 'Statistics-List-Item' && !this.state.Statistics){
+            this.setState({Statistics: true, LikedPhotos: false, PhotoView: false})
         }
     }
     render(){
@@ -80,6 +91,7 @@ class UserProfileClass extends React.Component {
                                 { this.data.badge === null ? this.data.name : this.data.badge.slug === 'verified' ? <i className="fas fa-check-circle">{'      '+ this.data.name}</i> : this.data.name  }
                             </label>
                         </div>
+                        <br/>
                         <div className="profile-info-container-header">
                             <p>{this.data.bio}</p>
                             <p>Followers <b>{this.data.followers_count}</b></p>
@@ -104,11 +116,15 @@ class UserProfileClass extends React.Component {
                                 <li className="list-group-item user-profile-menu-li" style={this.state.LikedPhotos ? {color: 'gray', backgroundColor: 'transparent'}:{color: 'black', backgroundColor: 'transparent'}}
                                     id="Liked-List-Item"
                                     onClick={ e => this.handleViewChange(e) }
-                                >Liked Photos</li>
+                                >Likes</li>
+                                <li className="list-group-item user-profile-menu-li" style={this.state.Statistics ? {color: 'gray', backgroundColor: 'transparent'}:{color: 'black', backgroundColor: 'transparent'}}
+                                    id="Statistics-List-Item"
+                                    onClick={ e => this.handleViewChange(e) }
+                                >Statistics</li>
                             </ul>
                         </div>
                         {
-                            this.state.PhotoView ? <UserPhotos username={this.data.username}/> : this.state.LikedPhotos ? <LikedPhotos username={this.data.username}></LikedPhotos> : <UserPhotos />
+                            this.state.PhotoView ? <UserPhotos username={this.data.username}/> : this.state.LikedPhotos ? <LikedPhotos username={this.data.username}></LikedPhotos> : this.state.Statistics ? <UserStatistics username={this.data.username}/> : <UserPhotos username={this.data.username}/>
                         }
                     </div>
                 </>
@@ -131,5 +147,78 @@ export default function UserProfile () {
     return (
         <UserProfileClass user_id={user_id} />
     )
+}
+class UserStatistics extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = { loading: true }
+        this.dowloadDate = []; this.dowloadValues = []; this.viewDate = []; this.viewValues = []
+        ChartJS.register(
+            CategoryScale, LinearScale, PointElement, LineElement, Legend
+        )
+    }
+
+    fetchData = async () => {
+        return await fetch('http://localhost:3588/api/user-lookup/statics?userName='+this.props.username)
+        .then(res => res.json())
+        .then(res => res.response)
+        .catch(err => console.log(err))
+    }
+
+    async componentDidMount(){
+        this.data = await this.fetchData()
+
+        this.data.downloads.historical.values.forEach( data => {
+            this.dowloadDate.push( data.date )
+            this.dowloadValues.push( parseInt( data.value ) )
+        })
+        
+
+        this.data.views.historical.values.forEach( data => {
+            this.viewDate.push( data.date )
+            this.viewValues.push( parseInt(data.value) )
+        })
+
+        this.dataSetDownloaded = {
+            labels: this.dowloadDate,
+            datasets: [ 
+                {
+                    label: "Photo Downloads", data: this.dowloadValues, borderColor: "black", backgroundColor: "black"
+                }
+            ]
+        }
+        this.dataSetViews = {
+            labels: this.viewDate,
+            datasets: [ 
+                {
+                    label: "Photo Views", data: this.viewValues, borderColor: "black", backgroundColor: "black"
+                }
+            ]
+        }
+
+        this.setState({loading: false})
+    }
+
+    chartDia = (data) => {
+        return(
+            <Line data={data} options={{responsive: true}} />
+        )
+    }
+
+
+    render() {
+        return (
+            <div className="container" style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center'}}>
+            <div className="card" style={{width: "100%", marginTop: '50px'}}>
+                { this.state.loading ? <></> : this.chartDia(this.dataSetDownloaded) }
+            </div>
+            <div className="card" style={{width: "100%", marginTop: '50px', marginBottom: '50px'}}>
+
+            { this.state.loading ? <></> : this.chartDia(this.dataSetViews) }
+                
+            </div>
+            </div>
+        )
+    }
 }
 

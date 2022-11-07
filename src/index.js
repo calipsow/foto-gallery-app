@@ -7,7 +7,8 @@ import {BrowserRouter as Router ,Routes, Route} from 'react-router-dom';
 import UserProfile from './components/UserProfile/UserProfilePage';
 import SearchSite from './components/SearchSite/SearchSite';
 import ContactComponent from './components/contact/contact';
-
+import Error404 from './components/404/404Page';
+// import LoginUser from './components/login/Login';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
@@ -17,6 +18,7 @@ root.render(
         <Route path={'user-profile/:user_id'} element={<UserProfile />} />
         <Route path={'search/query/:query'}  element={<SearchSite />} />
         <Route path={'contact'} element={<ContactComponent />} />
+        <Route path={'*'} element={<Error404 />} />
       </Routes>
     </Router>
   </React.StrictMode>

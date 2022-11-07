@@ -25,8 +25,8 @@ export default class UserPhotos extends React.Component {
 
         return (
             <p key={this.generateKey()} style={{textAlign: 'center'}}>
-                <img className="rounded mx-auto d-block" src={photoUrl} alt="image" 
-                width={ 'auto' } height={'auto'} style={{margin: '20px'}}/>
+                <img className="rounded mx-auto d-block img-fluid" src={photoUrl} alt="image" 
+                width={ 'auto' } height={'auto'} style={{margin: '20px', maxWidth: '100%', height: 'auto'}}/>
                 <b>{likes+'    '}</b><i className="far fa-heart"></i>
 
                 <a className="btn-icons link-elem-icon"   

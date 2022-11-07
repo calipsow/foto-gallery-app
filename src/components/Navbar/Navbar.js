@@ -79,7 +79,7 @@ class NavBarV2 extends React.Component{
                     </a>
                     <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                     <Link className="dropdown-item" to={'/'}>Startseite</Link>
-                    <a className="dropdown-item" href="#">Impressum</a>
+                    <Link to={'/user/login'} className="dropdown-item">Login</Link>
                     <div className="dropdown-divider"></div>
                     <Link to={'/contact'} className="dropdown-item" href="#">Kontakt</Link>
                     </div>
