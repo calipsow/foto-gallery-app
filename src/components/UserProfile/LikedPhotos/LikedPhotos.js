@@ -2,6 +2,7 @@ import React from 'react';
 import './LikedPhotos.css'
 import Loader from '../../loader/Loader'
 import NoResults from './../../assets/NoResults';
+import { Link } from 'react-router-dom'
 export default class LikedPhotos extends React.Component {
     constructor(props){
         super(props);
@@ -32,8 +33,9 @@ export default class LikedPhotos extends React.Component {
     createElementImage = (url, alt, likes, dataSet) => {
         const k = this.generateKey()
         return(
-            <p key={k} style={{textAlign: 'center', margin: '15px'}}>
-                <img id={k} className="rounded mx-auto d-block img-fluid" alt={alt} src={url} />
+            
+            <p  key={k} style={{textAlign: 'center', margin: '15px'}}>
+                <Link to={'/photo/statics/'+dataSet.id} ><img id={k} className="rounded mx-auto d-block img-fluid" alt={alt} src={url} /> </Link>
                 <legend htmmlFor={k}><b>{likes+'    '}</b><i className="far fa-heart"></i></legend>
                 <a className="btn-icons link-elem-icon"     
                         onClick={ e => this.handleDownloadEvent(e) }
@@ -47,6 +49,7 @@ export default class LikedPhotos extends React.Component {
                      
                 </a> 
             </p>
+            
         )
     }
     generateKey = () => {

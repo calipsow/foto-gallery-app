@@ -93,7 +93,7 @@ class SearchSiteClass extends React.Component {
         const k = this.generateKey()
         return(
             <p key={k} style={{textAlign: 'left', margin: '15px'}}>
-                <img id={k} className="rounded mx-auto d-block img-fluid" alt={alt} src={url} />
+                <Link to={'/photo/statics/'+dataSet.id}> <img id={k} className="rounded mx-auto d-block img-fluid" alt={alt} src={url} /></Link>
                 <legend htmmlfor={k}><b>{likes+'    '}</b><i className="far fa-heart"></i></legend>
                 <Link style={{textDecoration: 'none', color: 'black', fontWeight: 'bold'}} to={'/user-profile/'+dataSet.user.username}>{dataSet.user.username.toUpperCase()}</Link> 
                 <a className="btn-icons link-elem-icon"     

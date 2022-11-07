@@ -18,7 +18,7 @@ export default class PictureRend extends React.Component {
     async componentDidMount(){
         window.scrollTo(0, 0)
         this.data = await this.fetchData();
-        // console.log(this.data);
+        console.log(this.data);
         this.data.forEach( dataSet => {
             this.elements.push(
                 this.createElement(dataSet)
@@ -54,6 +54,7 @@ export default class PictureRend extends React.Component {
     }
 
     createElement = (dataSet) => {
+        
         var uid = this.generateKey()
         const keys = Object.keys(dataSet.urls)
 
@@ -71,16 +72,20 @@ export default class PictureRend extends React.Component {
 
                 <div className="picture-container" >                
                 <p >
-                <img 
-                    width={'100%'}
-                    height={'100%'}
-                    sizes={'(min-width: 1335px) 416px, (min-width: 992px) calc(calc(100vw - 72px) / 3), (min-width: 768px) calc(calc(100vw - 48px) / 2), 100vw'}
-                    srcSet={srcSet}
-                    className="img-generatet rounded mx-auto d-block"
-                    id={uid}
-                    src={ dataSet.urls.small.split('&').includes('w=400') ? dataSet.urls.regular : dataSet.urls.small }
-                    alt={ dataSet.user.name }                
-                ></img>
+
+                <Link to={'/photo/statics/'+dataSet.id} >
+                    <img 
+                        width={'100%'}
+                        height={'100%'}
+                        sizes={'(min-width: 1335px) 416px, (min-width: 992px) calc(calc(100vw - 72px) / 3), (min-width: 768px) calc(calc(100vw - 48px) / 2), 100vw'}
+                        srcSet={srcSet}
+                        className="img-generatet rounded mx-auto d-block"
+                        id={uid}
+                        src={ dataSet.urls.small.split('&').includes('w=400') ? dataSet.urls.regular : dataSet.urls.small }
+                        alt={ dataSet.user.name }                
+                    ></img>
+                </Link>
+
                 {dataSet.user.samsungmemory}
                 </p>
                 <div className="container-user-info">
