@@ -93,7 +93,7 @@ export default class ContactComponent extends React.Component {
         return (
             <React.Fragment>
                 <NavBar />
-                <div className="card bg-dark text-white" style={{borderRadius:'0', marginBottom: '150px'}}>
+                <div className="card bg-dark text-white" style={{borderRadius:'0', marginBottom: '150px', minHeight: '250px', backgroundColor: 'rgba(200, 100, 270,.5)'}}>
                 <img className="card-img" src="/volodymyr-hryshchenko-V5vqWC9gyEU-unsplash.jpg" alt="conatct" style={{borderRadius:'0'}}/>
                 <div className="card-img-overlay" style={{textAlign:'center', verticalAlign:'middle'}}>
                     <h2 className="card-title" >Contact Us</h2>

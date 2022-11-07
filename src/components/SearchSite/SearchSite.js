@@ -197,7 +197,7 @@ class SearchSiteClass extends React.Component {
                     }
                     
                 </div>
-                { !this.state.loading && this.state.success === null || this.state.success ? this.loadMoreButton() : <></> }
+                { !this.state.loading && !this.state.success || this.state.success ? this.loadMoreButton() : <div style={{width: '100%', height: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center'}}> <div className="alert alert-ligh" role="alert">Leider wurden keine weiteren Ergebnisse gefunden.</div></div>  }
                 { !this.state.loading ? <FooterComponent /> : <></>}
             </React.Fragment>
         )
