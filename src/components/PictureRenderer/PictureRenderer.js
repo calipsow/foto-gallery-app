@@ -2,6 +2,7 @@ import React from 'react';
 import './PictureRend.css'
 import { Link } from 'react-router-dom'
 import Loader from '../loader/Loader';
+import Unsplash from './../assets/unsplash'; 
 
 export default class PictureRend extends React.Component {
     constructor(props){
@@ -63,7 +64,7 @@ export default class PictureRend extends React.Component {
             if(key === 'raw' || key === 'small_s3') return;
             srcSet += dataSet.urls[key] + key === 'thumb' ? dataSet.urls[key]+' 200w, ' : key === 'small' ? dataSet.urls[key]+' 400w, ' : key === 'regular' ? dataSet.urls[key]+' 1080w, ' : key === 'full' ? dataSet.urls[key]+' 2080w, ' : '' 
         })
-        // console.log(srcSet)
+        console.log(dataSet)
         
         return (
             <React.Fragment key={uid}>
@@ -90,8 +91,7 @@ export default class PictureRend extends React.Component {
                 </p>
                 <div className="container-user-info">
                     <Link to={'/user-profile/'+dataSet.user.username} style={{textDecoration: 'none', cursor: 'pointer'}}>
-                        <img
-                            
+                        <img                            
                             id={uid}
                             src={dataSet.user.profile_image.medium}
                             width={'56px'}
@@ -124,8 +124,11 @@ export default class PictureRend extends React.Component {
                      
                     </a> 
                     }
-
-                </div>                    
+                   
+                </div>
+                <a className="btn-icons link-elem-icon" href={dataSet.links.html} target="_blank" style={{color: 'black', marginLeft: '0', position: 'absolute', top: '1px', right: '10px'}}>                 
+                    {<i className="fa fa-link" style={{color: 'white'}}></i>}
+                </a>              
                 </div>
                 
 

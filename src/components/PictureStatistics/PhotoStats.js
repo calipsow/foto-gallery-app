@@ -3,6 +3,10 @@ import { useParams, Link } from 'react-router-dom';
 import NavBar from './../Navbar/Navbar'
 import FooterComponent from './../footer/footer';
 import { Chart } from 'react-chartjs-2'
+import Trend from 'react-trend'
+import Statistics from './../assets/statics';
+
+
 import { 
     Chart as ChartJS,
     CategoryScale,
@@ -37,7 +41,6 @@ class PhotostatsClass extends React.Component {
         }
     }
     async componentDidMount(){
-        this.data = await this.fetchPhotData()
         this.photo = await this.fetchPhotoID()
         console.log(this.data, this.photo)
         this.setState({loading: false})
@@ -52,12 +55,6 @@ class PhotostatsClass extends React.Component {
 
     }
 
-    fetchPhotData = async () => {
-        return await fetch('http://localhost:3588/api/photo-lookup/statics?photoID='+this.props.photo_id)
-        .then(response => response.json())
-        .then(response => response.response)
-        .catch(err => console.log(err))
-    }
 
 
     render(){
@@ -77,10 +74,10 @@ class PhotostatsClass extends React.Component {
                  
                     <img className="card-img-bottom" src={this.photo.urls.regular} alt={this.photo.alt_description || this.photo.exif.name || 'image'} />
                     </div>
-                    <div className="fluid-width" >
+                    <div className="container fluid-width" >
                     
-                        <Statistics data={this.data} />
-
+                        
+                        <Statistics url={'http://localhost:3588/api/photo-lookup/statics?photoID='+this.props.photo_id} />
                     </div>
                     <RelatedPhotos data={this.photo} />
                     </>
@@ -91,81 +88,98 @@ class PhotostatsClass extends React.Component {
         )
     }
 }
+/*
+const Statistics__ = (props) => {
 
-const Statistics = (props) => {
-    let data = props.data
+    const [ data, setData ] = useState(props.data)
+    let dowloadDate = [], dowloadValues = [], viewDate = [], viewValues = [], likesDate = [], likesValues = []
+
     ChartJS.register(
         CategoryScale, LinearScale, PointElement, LineElement, Legend
     )
 
-    let dowloadDate = [], dowloadValues = [], viewDate = [], viewValues = [], likesDate = [], likesValues = []
+    useEffect(()=>{
 
-    data.downloads.historical.values.forEach( data => {
-        dowloadDate.push( data.date )
-        dowloadValues.push( parseInt( data.value ) )
-    })
+        dowloadDate = []; dowloadValues = []; viewDate = []; viewValues = []; likesDate = []; likesValues = []
+
+        data.downloads.historical.values.forEach( data => {
+            dowloadDate.push( data.date )
+            dowloadValues.push( parseInt( data.value ) )
+        })
+        
     
+        data.views.historical.values.forEach( data => {
+            viewDate.push( data.date )
+            viewValues.push( parseInt(data.value) )
+        })
 
-    data.views.historical.values.forEach( data => {
-        viewDate.push( data.date )
-        viewValues.push( parseInt(data.value) )
-    })
-    data.likes.historical.values.forEach( data => {
-        likesDate.push( data.date )
-        likesValues.push( parseInt(data.value) )
-    })
+        data.likes.historical.values.forEach( data => {
+            likesDate.push( data.date )
+            likesValues.push( parseInt(data.value) )
+        })    
+        
+    },[props])
 
-    let dataSetDownloaded = {
-        labels: dowloadDate,
-        datasets: [ 
-            {
-                label: "Photo Downloads", data: dowloadValues, borderColor: "rgb(70,190,120)", backgroundColor: "black"
-            }
-        ]
-    }
-    let dataSetViews = {
-        labels: viewDate,
-        datasets: [ 
-            {
-                label: "Photo Views", data: viewValues, borderColor: "rgb(70,190,120)", backgroundColor: "black"
-            }
-        ]
-    }
-    let dataSetLikes = {
-        labels: likesDate,
-        datasets: [ 
-            {
-                label: "Photo Views", data: likesValues, borderColor: "rgb(70,190,120)", backgroundColor: "black"
-            }
-        ]
-    }
+        data.downloads.historical.values.forEach( data => {
+            dowloadDate.push( data.date )
+            dowloadValues.push( parseInt( data.value ) )
+        })
+        
+    
+        data.views.historical.values.forEach( data => {
+            viewDate.push( data.date )
+            viewValues.push( parseInt(data.value) )
+        })
 
+        data.likes.historical.values.forEach( data => {
+            likesDate.push( data.date )
+            likesValues.push( parseInt(data.value) )
+        })  
+    
 
     return (
         <>
-        <div className="card w-100" style={{marginTop: '50px'}}>
+        <div className="card w-100 text-white bg-dark" style={{marginTop: '50px'}}>
             <div className="card-body">
-            <h5 className="card-title">{'Downloads Total: '+data.downloads.total}</h5>
-                <Chart type="line"  data={dataSetDownloaded} options={{responsive: true}} />
-
+            <h5 className="card-title" style={{marginLeft: '50px'}}>{'Downloads Trend: '+data.downloads.total}</h5>
+                <Trend type="line"  data={dowloadValues} gradient={['#fff','#ddd','#eee']} padding={1.5} 
+                 smooth autoDraw autoDrawDuration={300} autoDrawEasing="ease-out" radius={1.5} strokeWidth={0.7} strokeLinecap={'butt'}
+                />
+                <p className="card-text" style={{marginLeft: '50px', marginTop: '50px'}}>
+                    <span className="align-baseline">{
+                        dowloadDate.shift().split('-')[2]+'.'+dowloadDate.shift().split('-')[1]+'.'+dowloadDate.shift().split('-')[0]+'   -    '+dowloadDate.pop().split('-')[2]+'.'+dowloadDate.pop().split('-')[1]+'.'+dowloadDate.pop().split('-')[0]
+                    }</span>
+                </p>
 
             </div>
         </div>
 
-        <div className="card w-100" style={{marginTop: '50px'}}>
+        <div className="card w-100 text-white bg-dark" style={{marginTop: '50px'}}>
             <div className="card-body">
-            <h5 className="card-title">{'Views Total: '+data.views.total}</h5>
-                <Chart type="line"   data={dataSetViews} options={{responsive: true}} />
-
+            <h5 className="card-title" style={{marginLeft: '50px'}}>{'Views Trend: '+data.views.total}</h5>
+                <Trend type="line"   data={viewValues} gradient={['#fff','#ddd','#eee']} padding={1.5} 
+                 smooth autoDraw autoDrawDuration={300} autoDrawEasing="ease-out" radius={1.5} strokeWidth={0.7} strokeLinecap={'butt'} />
+                
+                <p className="card-text" style={{marginLeft: '50px', marginTop: '50px'}}>
+                    <span className="align-baseline">{
+                        viewDate.shift().split('-')[2]+'.'+viewDate.shift().split('-')[1]+'.'+viewDate.shift().split('-')[0]+'   -    '+viewDate.pop().split('-')[2]+'.'+viewDate.pop().split('-')[1]+'.'+viewDate.pop().split('-')[0]
+                    }</span>
+                </p>
 
             </div>
         </div>
 
-        <div className="card w-100" style={{marginTop: '50px'}}>
+        <div className="card w-100 text-white bg-dark" style={{marginTop: '50px'}}>
             <div className="card-body">
-            <h5 className="card-title">{'Likes last 30 days: '+data.likes.total}</h5>
-                <Chart type="line"   data={dataSetLikes} options={{responsive: true}} />
+            <h5 className="card-title" style={{marginLeft: '50px'}}>{'Likes Trend last 30 days: '+data.likes.total}</h5>
+                <Trend type="line"   data={likesValues} gradient={['#fff','#ddd','#eee']} padding={1.5} 
+                 smooth autoDraw autoDrawDuration={300} autoDrawEasing="ease-out" radius={1.5} strokeWidth={0.7} strokeLinecap={'butt'} />
 
+                <p className="card-text" style={{marginLeft: '50px', marginTop: '50px'}}>
+                    <span className="align-baseline">{
+                        likesDate.shift().split('-')[2]+'.'+likesDate.shift().split('-')[1]+'.'+likesDate.shift().split('-')[0]+'   -    '+likesDate.pop().split('-')[2]+'.'+likesDate.pop().split('-')[1]+'.'+likesDate.pop().split('-')[0]
+                    }</span>
+                </p>
 
             </div>
         </div>
@@ -173,7 +187,7 @@ const Statistics = (props) => {
         </>
     )
 }
-
+*/
 const createElementImage = (url, alt, id) => {
     
     const handleEvent= (e) => {
@@ -190,11 +204,11 @@ const createElementImage = (url, alt, id) => {
 
     return(
         <Link to={'/photo/statics/'+id} onClick={e => handleEvent(e)} key={generateKey()}>
-        <div class="card">
+        <div className="card">
             
-                <img class="card-img-top" src={url} alt={alt} />
+                <img className="card-img-top" src={url} alt={alt} />
             
-            <div class="card-body">            
+            <div className="card-body">            
             </div>
             
         </div>
@@ -213,8 +227,17 @@ const RelatedPhotos = (props) => {
 
  
     return (
-            <div class="card-group" style={{marginTop: '50px'}}>
+        <div style={{marginTop: '150px'}} className="container fluid-width">
+            <div class="card">
+            <div class="card-body">
+                <p className="card-text text-center">Ähnliche Bilder</p>
+            </div>
+            </div>
+        
+            <div className="container fluid-width card-group" style={{marginTop: '50px'}}>
+
                 { elements.length > 0 ? elements.map( el => el ) : <></> }
             </div>
+        </div>
     )
 }

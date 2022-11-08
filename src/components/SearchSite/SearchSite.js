@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom'
 import Loader from '../loader/Loader';
 import NoResults from './../assets/NoResults';
 import FooterComponent from '../footer/footer';
+import Unsplash from './../assets/unsplash';
 
 export default function SearchSite(){
     let { query } = useParams();
@@ -30,7 +31,7 @@ class SearchSiteClass extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: true, success: null, loadingPage: 1, elements: []
+            loading: true, success: null, loadingPage: 1, elements: [], temporarilyUrl: '/bastian-riccardi-PBTEeIadS20-unsplash.jpg', errorLoading: false
         }
         this.loadPages = 1
         this.data = []
@@ -54,7 +55,7 @@ class SearchSiteClass extends React.Component {
             this.elements.push(this.createElementImage(dataSet.urls.small, dataSet.alt_description || this.props.query, dataSet.likes, dataSet))
         })
         this.loadPages += 1
-        this.setState({loading: false, success: true, loadingPage: this.loadPages, elements: this.elements})
+        this.setState({loading: false, success: true, loadingPage: this.loadPages, elements: this.elements, errorLoading: false})
     }
 
     async componentDidUpdate(){
@@ -74,7 +75,7 @@ class SearchSiteClass extends React.Component {
             this.elements.push(this.createElementImage(dataSet.urls.small, dataSet.alt_description || this.props.query, dataSet.likes, dataSet))
         })
         this.loadPages += 1
-        this.setState({loading: false, success: true, loadingPage: this.loadPages, elements: this.elements})
+        this.setState({loading: false, success: true, loadingPage: this.loadPages, elements: this.elements, errorLoading: false})
     }
 
     fetchDataQuery = async () => {
@@ -93,9 +94,11 @@ class SearchSiteClass extends React.Component {
         const k = this.generateKey()
         return(
             <p key={k} style={{textAlign: 'left', margin: '15px'}}>
-                <Link to={'/photo/statics/'+dataSet.id}> <img id={k} className="rounded mx-auto d-block img-fluid" alt={alt} src={url} /></Link>
+                <Link to={'/photo/statics/'+dataSet.id}> 
+                <img id={k} className="rounded mx-auto d-block img-fluid" alt={alt} src={url} /></Link>
                 <legend htmmlfor={k}><b>{likes+'    '}</b><i className="far fa-heart"></i></legend>
                 <Link style={{textDecoration: 'none', color: 'black', fontWeight: 'bold'}} to={'/user-profile/'+dataSet.user.username}>{dataSet.user.username.toUpperCase()}</Link> 
+
                 <a className="btn-icons link-elem-icon"     
                         onClick={ e => this.handleDownloadEvent(e) }
                         href={dataSet.urls.small_s3}
@@ -107,10 +110,15 @@ class SearchSiteClass extends React.Component {
 
                      
                 </a> 
+                <a className="btn-icons" href={dataSet.links.html} target="_blank" style={{color: 'black', marginLeft: '50px'}}>                 
+                    {<i className="fa fa-link" style={{color: 'white'}}></i>}
+                </a>
                 
             </p>
         )
     }
+
+    
 
     loadMoreButton = () => {
 
@@ -166,6 +174,9 @@ class SearchSiteClass extends React.Component {
         });
         
     }
+    handleError = (err) => {
+        this.setState({errorLoading: true})
+    }
 
     render() {
 
@@ -173,11 +184,21 @@ class SearchSiteClass extends React.Component {
 
             <React.Fragment>
                 <NavBar />
-                <div class="card bg-dark text-white"style={{borderRadius:'0', minHeight: '500px'}}>
-                    <img class="card-img" src={this.temporarilyUpdate.url} alt={this.temporarilyUpdate.alt} />
-                    <div class="card-img-overlay" style={{borderRadius:'0'}}>
-                    <div class="jumbotron" style={{backgroundColor:'rgba(170,170,170,.2)', backdropFilter:'blur(2px)'}}>
-                            <h1 class="display-4">{ !this.state.loading ? this.props.query.toUpperCase().replace(/[-]/g, ' ') : '' }</h1>
+                <div className="card bg-dark text-white"style={{borderRadius:'0', minHeight: '500px'}}>
+                    { 
+                        !this.state.errorLoading ? 
+                        <img className="card-img" src={this.temporarilyUpdate.url} alt={this.temporarilyUpdate.alt} 
+                        onError={e => this.handleError(e) }
+                        />
+                        : 
+                        <img class="card-img" src={this.state.temporarilyUrl} alt={this.temporarilyUpdate.alt} 
+                        onError={e => this.handleError(e) }
+                        />                    
+                    }
+
+                    <div className="card-img-overlay" style={{borderRadius:'0'}}>
+                    <div className="jumbotron" style={{backgroundColor:'rgba(170,170,170,.2)', backdropFilter:'blur(2px)'}}>
+                            <h1 className="display-4">{ !this.state.loading ? this.props.query.toUpperCase().replace(/[-]/g, ' ') : '' }</h1>
 
                                                     
                             </div>

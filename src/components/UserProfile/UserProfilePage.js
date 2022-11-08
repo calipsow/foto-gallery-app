@@ -6,7 +6,9 @@ import Loader from './../loader/Loader';
 import UserPhotos from './UserPhotos/UserPhotos';
 import LikedPhotos from './LikedPhotos/LikedPhotos';
 import FooterComponent from './../footer/footer';
+import Trend from 'react-trend'
 import { Line } from 'react-chartjs-2'
+import Statistics from './../assets/statics';
 import { 
     Chart as ChartJS,
     CategoryScale,
@@ -124,7 +126,13 @@ class UserProfileClass extends React.Component {
                             </ul>
                         </div>
                         {
-                            this.state.PhotoView ? <UserPhotos username={this.data.username}/> : this.state.LikedPhotos ? <LikedPhotos username={this.data.username}></LikedPhotos> : this.state.Statistics ? <UserStatistics username={this.data.username}/> : <UserPhotos username={this.data.username}/>
+                            this.state.PhotoView ? <UserPhotos username={this.data.username}/> : this.state.LikedPhotos ? <LikedPhotos username={this.data.username}></LikedPhotos> : this.state.Statistics 
+                            ? 
+                            <div className="container fluid-width" style={{paddingBottom: '50px'}}>
+                            <Statistics url={'http://localhost:3588/api/user-lookup/statics?userName='+this.data.username}/> </div> 
+                            
+                            
+                            : <UserPhotos username={this.data.username}/>
                         }
                     </div>
                 </>
@@ -136,7 +144,10 @@ class UserProfileClass extends React.Component {
     }
 
 }
-
+const generateKey = () => {
+    const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+    return s4() + s4() + '-' + s4() + '-' + new Date().getTime();
+}
 
 
 
@@ -151,7 +162,7 @@ export default function UserProfile () {
 class UserStatistics extends React.Component {
     constructor(props) {
         super(props)
-        this.state = { loading: true }
+        this.state = { loading: true, test: true }
         this.dowloadDate = []; this.dowloadValues = []; this.viewDate = []; this.viewValues = []
         ChartJS.register(
             CategoryScale, LinearScale, PointElement, LineElement, Legend
@@ -167,18 +178,22 @@ class UserStatistics extends React.Component {
 
     async componentDidMount(){
         this.data = await this.fetchData()
-
+        this.dowloadDate = []; this.dowloadValues = []; this.viewDate = []; this.viewValues = []
         this.data.downloads.historical.values.forEach( data => {
+           
             this.dowloadDate.push( data.date )
             this.dowloadValues.push( parseInt( data.value ) )
+
         })
         
 
         this.data.views.historical.values.forEach( data => {
             this.viewDate.push( data.date )
             this.viewValues.push( parseInt(data.value) )
+
         })
 
+        
         this.dataSetDownloaded = {
             labels: this.dowloadDate,
             datasets: [ 
@@ -200,22 +215,54 @@ class UserStatistics extends React.Component {
     }
 
     chartDia = (data) => {
-        return(
+
+
+        if( this.state.test ){
+            return (
+                <Trend
+                smooth autoDraw autoDrawDuration autoDrawEasing="ease-out" radius={1.5} strokeWidth={0.9} strokeLinecap={'butt'}
+                data={data} gradient={['#fff','#ddd','#eee']} padding={1.5} />
+            )
+        
+        
+        } else {
+            return(
+
             <Line data={data} options={{responsive: true}} />
         )
+        }
     }
 
 
     render() {
+
         return (
             <div className="container" style={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center'}}>
-            <div className="card" style={{width: "100%", marginTop: '50px'}}>
-                { this.state.loading ? <></> : this.chartDia(this.dataSetDownloaded) }
+            <div className="card text-white bg-dark" style={{width: "100%", marginTop: '50px'}}>
+            <h5 class="card-title" style={{marginLeft: '50px'}}>Downloads</h5>
+                { this.state.loading ? <></> : this.chartDia( this.dowloadValues ) }
+                {
+                    !this.state.loading ? 
+                    <p className="card-text" style={{marginLeft: '50px'}}>
+                    <span className="align-baseline">{
+                        this.dowloadDate.shift().split('-')[2]+'.'+this.dowloadDate.shift().split('-')[1]+'.'+this.dowloadDate.shift().split('-')[0]+'   -    '+this.dowloadDate.pop().split('-')[2]+'.'+this.dowloadDate.pop().split('-')[1]+'.'+this.dowloadDate.pop().split('-')[0]
+                    }</span>
+                    </p>
+                    : null
+                }            
             </div>
-            <div className="card" style={{width: "100%", marginTop: '50px', marginBottom: '50px'}}>
-
-            { this.state.loading ? <></> : this.chartDia(this.dataSetViews) }
-                
+            <div className="card text-white bg-dark" style={{width: "100%", marginTop: '50px', marginBottom: '50px'}}>
+            <h5 class="card-title"style={{marginLeft: '50px'}}>Views</h5>
+            { this.state.loading ? <></> : this.chartDia( this.viewValues ) }
+            {
+                    !this.state.loading ? 
+                    <p className="card-text" style={{marginLeft: '50px'}}>
+                    <span className="align-baseline">{
+                        this.viewDate.shift().split('-')[2]+'.'+this.viewDate.shift().split('-')[1]+'.'+this.viewDate.shift().split('-')[0]+'   -    '+this.viewDate.pop().split('-')[2]+'.'+this.viewDate.pop().split('-')[1]+'.'+this.viewDate.pop().split('-')[0]
+                    }</span>
+                    </p>
+                    : null
+                } 
             </div>
             </div>
         )
