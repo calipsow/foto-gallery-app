@@ -2,14 +2,15 @@ import React from 'react';
 import './PictureRend.css'
 import { Link } from 'react-router-dom'
 import Loader from '../loader/Loader';
-
+import Likes from '../assets/likes';
+import { useNavigate } from 'react-router-dom';
 export default class PictureRend extends React.Component {
     constructor(props){
         super(props);
         this.state = {
             elements: [],
             loading: true,
-            loadingPage: 0
+            loadingPage: 0, liked: false
         }
         this.loadingPage = 0;
         this.data = []; this.elements = [];
@@ -51,8 +52,9 @@ export default class PictureRend extends React.Component {
         this.setState({loadingPage: this.loadPages, elements: this.elements})
     }
 
+
     createElement = (dataSet) => {
-        
+        console.log(dataSet)
         var uid = this.generateKey()
         const keys = Object.keys(dataSet.urls)
 
@@ -106,9 +108,7 @@ export default class PictureRend extends React.Component {
                        
                 </div>
                 <div className="button-container">
-                    <button className="btn-icons">
-                        {dataSet.likes+'    '}<i className="far fa-heart" ></i>
-                    </button>
+                    <LikeButton dataSet={dataSet} photo_id={dataSet.id} liked_by_user={dataSet.liked_by_user}/>
                     {
                     <a className="btn-icons link-elem-icon"     
                         onClick={ e => this.handleDownloadEvent(e) }
@@ -125,7 +125,9 @@ export default class PictureRend extends React.Component {
                     }
                    
                 </div>
-                <a className="btn-icons link-elem-icon" rel={'noreferrer'} href={dataSet.links.html} target="_blank" style={{color: 'black', marginLeft: '0', position: 'absolute', top: '1px', right: '10px'}}>                 
+                <a 
+                    className="btn-icons link-elem-icon" rel={'noreferrer'} href={dataSet.links.html} 
+                    target="_blank" style={{color: 'black', marginLeft: '0', position: 'absolute', top: '1px', right: '10px'}}>                 
                     {<i className="fa fa-link" style={{color: 'white'}}></i>}
                 </a>              
                 </div>
@@ -214,3 +216,28 @@ ttps://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=
     }
 }
 
+const LikeButton = (props) => {
+    const navigate = useNavigate()
+    const [ liked, setLike ] = React.useState(props.liked_by_user)
+
+    React.useEffect(() => {
+        if(!window.localStorage.getItem('access_token')){
+            navigate('/user/authorization')
+        }
+        
+    },[liked])
+
+    const handleLikeEvent = async (e) => {        
+        e.preventDefault();
+        setLike(!liked)
+        let status = await Likes({photo_id: props.photo_id, token: window.localStorage.getItem('access_token'), liked: liked})
+        console.log(status)        
+    } 
+
+    return(
+        <button className="btn-icons" onClick={ e => handleLikeEvent(e) } >
+            {props.dataSet.likes+'    '}{ !liked ? <i className="far fa-heart" ></i> : <i className="fas fa-heart" ></i> }
+        </button>
+    )
+
+}

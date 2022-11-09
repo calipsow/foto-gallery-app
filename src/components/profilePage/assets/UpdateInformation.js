@@ -54,7 +54,8 @@ export default class UpdateInformation extends React.Component {
 
     render() {
         return (
-            <div className="container">
+            <div className="conatainer-fluid">
+            <div className="container d-flex justify-content-center">
                 <div class="d-flex flex-column bd-highlight mb-3 justify-content-center">
                     <div class="d-flex p-2 bd-highlight flex-row justify-content-between">
                       
@@ -161,12 +162,13 @@ export default class UpdateInformation extends React.Component {
 
                     <div class="d-flex p-2 bd-highlight flex-row justify-content-between">
                       
-                        <div class="d-flex flex-column ">
+                        <div class="d-flex flex-column " style={{width: '100%'}}>
                         <div class="d-flex p-2 bd-highlight"><span class="font-weight-bold">{ this.props.data.bio=== null ? 'Bio' : this.props.data.bio}</span>  </div>  
-                            <div class="input-group mb-3">                            
-                                <input type="text" class="form-control" placeholder="Bio" aria-label="Bio" aria-describedby="button-addon2-bio" 
+                            <div class="input-group mb-3" >  
+                                <textarea class="form-control" aria-label="Bio" placeholder="Bio" aria-describedby="button-addon2-bio" 
                                 onChange={e=>this.handleChangeEvent(e)}
-                                />
+                                ></textarea>                          
+
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" type="button" id="button-addon2-bio"
                                     onClick={e => this.handleUpdateEvent(e) }
@@ -194,6 +196,7 @@ export default class UpdateInformation extends React.Component {
                     </div>
 
                 </div>
+            </div>
             </div>
         )
     }

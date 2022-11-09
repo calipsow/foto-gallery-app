@@ -78,6 +78,7 @@ class CurrentUserProfileClass extends React.Component {
         }
     }
     render() {
+        console.log(this.userData)
         if( this.state.loading ){
             return <Loader />
         }
@@ -87,12 +88,12 @@ class CurrentUserProfileClass extends React.Component {
 
             <div className="container-fluid" style={{height: 'auto', minHeight: '100vh', margin: '0', padding: '0'}}>
                 
-                    <div className="container-fluid text-dark" style={{height: 'auto', minHeight: '250px', backgroundColor: 'var(--bg-light-white)'}}>
+                    <div className="container-fluid text-dark" style={{paddingTop: '20px', height: 'auto', minHeight: '250px', backgroundColor: 'var(--bg-light-white)'}}>
                     <div className="user-profile-image-container text-dark">
                             <img
                                 id={this.userData.id}
                                 className={'img-generatet'}
-                                src={ this.userData.profile_image.medium.split('/').includes('placeholder-avatars') ? '/icons8-name-64.svg' : this.userData.profile_image.medium }
+                                src={ this.userData.profile_image.large.split('/').includes('placeholder-avatars') ? '/icons8-name-64.svg' : this.userData.profile_image.large }
                                 width={'115px'} height={'115px'}
                                 style={{borderRadius: '100%'}}
                             >
@@ -101,6 +102,7 @@ class CurrentUserProfileClass extends React.Component {
                                     {this.userData.username}
                             </label>
                         </div>
+                        <br/>
                         <div className="profile-info-container-header text-dark">
                             <p>{this.userData.bio || 'most logical parent container of the <ul>, or wrap a <nav> element around the whole navigation. Do not add the role to the <ul> itself, as this would prevent it from being'}</p>
                             <p>Followers <b>{this.userData.followers_count}</b></p>
