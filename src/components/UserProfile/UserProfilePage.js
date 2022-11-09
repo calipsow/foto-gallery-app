@@ -78,14 +78,14 @@ class UserProfileClass extends React.Component {
                                 style={{borderRadius: '100%'}}
                             >
                             </img>
-                            <label htmmlFor={this.data.id} className="profile-username-header">                            
+                            <label htmmlFor={this.data.id} className="profile-username-header font-weight-bold text-light">                            
                                 { this.data.badge === null ? this.data.name : this.data.badge.slug === 'verified' ? <i className="fas fa-check-circle">{'      '+ this.data.name}</i> : this.data.name  }
                             </label>
                         </div>
                         <br/>
                         <div className="profile-info-container-header">
-                            <p>{this.data.bio}</p>
-                            <p>Followers <b>{this.data.followers_count}</b></p>
+                            <p className='font-weight-normal text-white'>{this.data.bio}</p>
+                            <p className='font-weight-light text-white-50'>Followers <b>{this.data.followers_count}</b></p>
 
                             <p className="profile-info-interesets">
                                 

@@ -71,17 +71,23 @@ class PhotostatsClass extends React.Component {
                             </img>
                         </Link>
                             <label htmmlFor={this.photo.id} className="profile-username-header">                            
-                                { this.photo.badge === undefined || null ? this.photo.name : this.photo.badge.slug === 'verified' ? <i className="fas fa-check-circle">{'      '+ this.photo.name}</i> : this.data.name  }
+                                { this.photo.badge === undefined || null 
+                                ? this.photo.name 
+                                : this.photo.badge.slug === 'verified' 
+                                ? <i className="fas fa-check-circle">{'      '+ this.photo.name}</i> : this.data.name  }
                             </label>
                             </div>
 
-                        <Link style={{textDecoration: 'none', color: 'black'}} to={'/user-profile/'+this.photo.user.username}> <h5 className="card-title">{this.photo.user.first_name+'  '+this.photo.user.last_name}</h5></Link>
+                        <Link style={{textDecoration: 'none', color: 'black'}} 
+                        to={'/user-profile/'+this.photo.user.username}> <h5 className="card-title">{this.photo.user.first_name+'  '+this.photo.user.last_name}</h5></Link>
                         <p className="card-text">{this.photo.user.bio || ''}</p>
                         <p className="card-text"><small className="text-muted">Overview</small></p>
                         <DownloadButton data={this.photo} />
                     </div>
                  
-                    <img className="card-img-bottom" src={this.photo.urls.regular} alt={this.photo.alt_description || this.photo.exif.name || 'image'} />
+                    <img 
+                    className="card-img-bottom" src={this.photo.urls.regular} 
+                    alt={this.photo.alt_description || this.photo.exif.name || 'image'} />
                     </div>
                     <div class="card">
                         <div class="card-body">
@@ -154,7 +160,7 @@ const PhotoInforamtion = (data) => {
                 <div className="media text-white bg-dark">
                         <img className="mr-3" src={'/icons8-bar-chart-64.svg'} alt="Views"/>
                         <div className="media-body">
-                            <h5 className="mt-0">{ 'Downloads Rate' }</h5>
+                            <h5 className="mt-0">{ 'Download Rate' }</h5>
                             <h5 className="mt-0">{ (data.data.downloads / data.data.views) > 0.000001 
                             ? (data.data.downloads / data.data.views).toFixed(7) : 'Rate not available' }</h5>
                             <p className="font-weight-light">

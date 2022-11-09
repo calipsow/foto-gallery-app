@@ -88,7 +88,7 @@ class CurrentUserProfileClass extends React.Component {
 
             <div className="container-fluid" style={{height: 'auto', minHeight: '100vh', margin: '0', padding: '0'}}>
                 
-                    <div className="container-fluid text-dark" style={{paddingTop: '20px', height: 'auto', minHeight: '250px', backgroundColor: 'var(--bg-light-white)'}}>
+                    <div className="container-fluid text-dark" style={{paddingTop: '20px', height: 'auto', minHeight: '250px', backgroundColor: 'black'}}>
                     <div className="user-profile-image-container text-dark">
                             <img
                                 id={this.userData.id}
@@ -98,14 +98,14 @@ class CurrentUserProfileClass extends React.Component {
                                 style={{borderRadius: '100%'}}
                             >
                             </img>
-                            <label htmmlFor={this.userData.id} className="profile-username-header text-dark">                            
+                            <label htmmlFor={this.userData.id} className="profile-username-header text-light font-weight-bold">                            
                                     {this.userData.username}
                             </label>
                         </div>
                         <br/>
-                        <div className="profile-info-container-header text-dark">
-                            <p>{this.userData.bio || 'most logical parent container of the <ul>, or wrap a <nav> element around the whole navigation. Do not add the role to the <ul> itself, as this would prevent it from being'}</p>
-                            <p>Followers <b>{this.userData.followers_count}</b></p>
+                        <div className="profile-info-container-header text-white">
+                            <p className="text-white font-weight-normal">{this.userData.bio || 'most logical parent container of the <ul>, or wrap a <nav> element around the whole navigation. Do not add the role to the <ul> itself, as this would prevent it from being'}</p>
+                            <p className='text-white-50 font-weight-light'>Followers <b>{this.userData.followers_count}</b></p>
 
                             <p className="profile-info-interesets">
                                 
@@ -150,7 +150,7 @@ class CurrentUserProfileClass extends React.Component {
                         {
                         this.state.menu_1 ? <div className="container" style={{marginBottom: '100px', paddingTop: '20px'}}> <UserPhotos username={ this.userData.username } /> </div>
                         : this.state.menu_2 ? <div className="container" style={{marginBottom: '100px'}}><Statistics dataSet={this.stats} url={'http://localhost:3588/api/user-lookup/statics?userName='+this.userData.username} /></div> 
-                        : this.state.menu_3 ? <div className="container" style={{marginBottom: '100px' , paddingTop: '20px'}} > <LikedPhotos username={ this.userData.username } /> </div> 
+                        : this.state.menu_3 ?  <LikedPhotos username={ this.userData.username } /> 
                         : this.state.menu_4 ? <div className="container" style={{marginBottom: '100px', paddingTop: '20px'}} > <UpdateInformation data={ this.userData} /> </div> 
                         : null  
                         

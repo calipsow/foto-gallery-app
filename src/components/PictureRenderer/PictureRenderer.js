@@ -186,15 +186,16 @@ ttps://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=
 */
 
     render() {
+        let sty = {backgroundColor:'rgba(170,170,170,0)', backdropFilter:'blur(2px)'}
         return (
             <React.Fragment>
                 <div class="card bg-dark text-white"style={{borderRadius:'0'}}>
-                    <img class="card-img" src={'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2560&q=80'} alt="Card logo callipson" />
+                    <img class="card-img" src={'/sebastian-svenson-d2w-_1LJioQ-unsplash.jpg'} alt="Card logo callipson" />
                     <div class="card-img-overlay" style={{borderRadius:'0'}}>
-                    <div class="jumbotron" style={{backgroundColor:'rgba(170,170,170,.2)', backdropFilter:'blur(2px)'}}>
-                            <h1 class="display-4">Callipson</h1>
+                    <div class="jumbotron" style={sty}>
+                            <h1 class="display-4 text-light font-weight-bold">Callipson</h1>
                             <hr class="my-4"/>
-                            <p class="lead" style={{fontSize:'1rem'}}>This Application is powered by Unsplash</p>
+                            <p class="lead text-white font-weight-light" style={{fontSize:'1rem'}}>This Application is powered by Unsplash</p>
                             
                             
                             </div>

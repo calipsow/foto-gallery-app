@@ -44,13 +44,16 @@ class SearchSiteClass extends React.Component {
     async componentDidMount(){
         window.scrollTo(0, 0)
         this.data = await this.fetchDataQuery()
- 
+        console.log(this.data)
         if(this.data.total === 0 ){
             this.setState({loading: false, success: false})
             return;
         }
         this.data.results.forEach(dataSet => {
-            this.temporarilyUpdate.url = dataSet.urls.regular; this.temporarilyUpdate.alt = dataSet.alt_description; this.temporarilyUpdate.likes = dataSet.likes
+            this.temporarilyUpdate.url = dataSet.urls.regular; 
+            this.temporarilyUpdate.alt = dataSet.alt_description; 
+            this.temporarilyUpdate.likes = dataSet.likes; 
+            this.temporarilyUpdate.data = dataSet
 
             this.elements.push(this.createElementImage(dataSet.urls.small, dataSet.alt_description || this.props.query, dataSet.likes, dataSet))
         })
@@ -65,13 +68,16 @@ class SearchSiteClass extends React.Component {
         this.setState({loading: true})
         this.elements = [];
         this.data = await this.fetchDataQuery()
-
+        console.log(this.data)
         if(this.data.total === 0 ){
             this.setState({loading: false, success: false})
             return;
         }
         this.data.results.forEach(dataSet => {
-            this.temporarilyUpdate.url = dataSet.urls.regular; this.temporarilyUpdate.alt = dataSet.alt_description; this.temporarilyUpdate.likes = dataSet.likes
+            this.temporarilyUpdate.url = dataSet.urls.regular; 
+            this.temporarilyUpdate.alt = dataSet.alt_description; 
+            this.temporarilyUpdate.likes = dataSet.likes; 
+            this.temporarilyUpdate.data = dataSet
 
             this.elements.push(this.createElementImage(dataSet.urls.small, dataSet.alt_description || this.props.query, dataSet.likes, dataSet))
         })
@@ -98,7 +104,8 @@ class SearchSiteClass extends React.Component {
                 <Link to={'/photo/statics/'+dataSet.id}> 
                 <img id={k} className="rounded mx-auto d-block img-fluid" alt={alt} src={url} /></Link>
                 <LikeButtons k={k} data={dataSet} />
-                <Link style={{textDecoration: 'none', color: 'black', fontWeight: 'bold'}} to={'/user-profile/'+dataSet.user.username}>{dataSet.user.username.toUpperCase()}</Link> 
+                <Link style={{textDecoration: 'none', color: 'black', fontWeight: 'bold'}} 
+                to={'/user-profile/'+dataSet.user.username}>{dataSet.user.username.toUpperCase()}</Link> 
 
                 <a className="btn-icons link-elem-icon"     
                         onClick={ e => this.handleDownloadEvent(e) }
@@ -178,14 +185,28 @@ class SearchSiteClass extends React.Component {
     handleError = (err) => {
         this.setState({errorLoading: true})
     }
+    getDescription = (data, style) => {
+        let arr = data.tags.map( tag => {
+            if(!!tag.source){
+                let str = tag.source.description || tag.source.title || tag.source.meta_description
+                return str
+            } 
+        })
+        if(!arr[0]){ 
+            let str = data.alt_description || data.description || data.user.bio || data.user.location || data.user.username
+            return (<p class="lead text-white font-weight-light" style={style}>{str}</p>)
+        }
+        return (<p class="lead text-white font-weight-light" style={style}>{arr[0]}</p>)
+    }
 
     render() {
-
+        let sty = {backgroundColor:'rgba(35,35,35,.3)', backdropFilter:'blur(5px)'}
+        let textBlendStyle = {mixBlendMode: 'different'}
         return (
 
             <React.Fragment>
                 <NavBar />
-                <div className="card bg-dark text-white"style={{borderRadius:'0', minHeight: '250px'}}>
+                <div className="card bg-dark text-white"style={{borderRadius:'0', minHeight: '350px'}}>
                     { 
                         !this.state.errorLoading ? 
                         <img className="card-img" src={this.temporarilyUpdate.url} alt={this.temporarilyUpdate.alt} 
@@ -198,11 +219,20 @@ class SearchSiteClass extends React.Component {
                     }
 
                     <div className="card-img-overlay" style={{borderRadius:'0'}}>
-                    <div className="jumbotron" style={{backgroundColor:'rgba(170,170,170,.2)', backdropFilter:'blur(2px)'}}>
-                            <h1 className="display-4">{ !this.state.loading ? this.props.query.toUpperCase().replace(/[-]/g, ' ') : '' }</h1>
-
-                                                    
-                            </div>
+                    <div className="jumbotron" style={sty}>
+                        <h1 className="display-4 font-weight-normal text-white">{ !this.state.loading ? this.props.query.toUpperCase().replace(/[-]/g, ' ') : '' }</h1>
+                        <hr class="my-4"/>
+                        <p class="lead text-white font-weight-bold" style={textBlendStyle}>{
+                        !this.state.loading && this.state.success ?
+                        this.temporarilyUpdate.data.user.name 
+                        :this.state.loading ? '' : !this.state.loading && this.state.success === false ? 'Sorry, there are no Pictures' : '' }
+                        </p>
+                        { 
+                        !this.state.loading && this.state.success ?
+                        this.getDescription(this.temporarilyUpdate.data, textBlendStyle)
+                        : this.state.loading ? '' : !this.state.loading && this.state.success === false ? 'We coudnt find any Pictures..' : ''
+                        }                       
+                    </div>
 
                     </div>
                 </div>
@@ -219,7 +249,10 @@ class SearchSiteClass extends React.Component {
                     }
                     
                 </div>
-                { !this.state.loading && !this.state.success || this.state.success ? this.loadMoreButton() : <div style={{width: '100%', height: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center'}}> <div className="alert alert-ligh" role="alert">Leider wurden keine weiteren Ergebnisse gefunden.</div></div>  }
+                { !this.state.loading && this.state.success ? this.loadMoreButton() 
+                : <div style={{width: '100%', height: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center'}}> 
+                    <div className="alert alert-ligh" role="alert">Leider wurden keine weiteren Ergebnisse gefunden.</div></div>  
+                    }
                 { !this.state.loading ? <FooterComponent /> : <></>}
             </React.Fragment>
         )
