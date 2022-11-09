@@ -5,10 +5,11 @@ import 'jquery/dist/jquery.min.js'; // Have to install and import jQuery because
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import NavBar from '../Navbar/Navbar';
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Loader from '../loader/Loader';
 import NoResults from './../assets/NoResults';
 import FooterComponent from '../footer/footer';
+import Like from '../assets/likes';
 
 export default function SearchSite(){
     let { query } = useParams();
@@ -96,7 +97,7 @@ class SearchSiteClass extends React.Component {
             <p key={k} style={{textAlign: 'left', margin: '15px'}}>
                 <Link to={'/photo/statics/'+dataSet.id}> 
                 <img id={k} className="rounded mx-auto d-block img-fluid" alt={alt} src={url} /></Link>
-                <legend htmmlfor={k}><b>{likes+'    '}</b><i className="far fa-heart"></i></legend>
+                <LikeButtons k={k} data={dataSet} />
                 <Link style={{textDecoration: 'none', color: 'black', fontWeight: 'bold'}} to={'/user-profile/'+dataSet.user.username}>{dataSet.user.username.toUpperCase()}</Link> 
 
                 <a className="btn-icons link-elem-icon"     
@@ -223,4 +224,33 @@ class SearchSiteClass extends React.Component {
             </React.Fragment>
         )
     }
+}
+
+
+const LikeButtons = (props) => {
+    const navigate = useNavigate()
+    const [liked, setLike] = React.useState(props.data.liked_by_user)
+    React.useEffect(()=>{
+        if(!window.localStorage.getItem('access_token')){
+            navigate('/user/authorization')
+        }
+
+    },[liked])
+
+    const handleClick = async (e) => {
+        e.preventDefault()
+        setLike(!liked)
+
+        await Like({liked: props.data.liked_by_user, token: window.localStorage.getItem('access_token'), photo_id: props.data.id})
+    }
+
+    return (
+        <>
+        <legend onClick={e => handleClick(e) } htmmlfor={props.k}><b>{props.data.likes+'    '}</b>
+            {
+                liked ? <i className="fas fa-heart"></i> : <i className="far fa-heart"></i> 
+            }                
+        </legend>
+        </>
+    )
 }

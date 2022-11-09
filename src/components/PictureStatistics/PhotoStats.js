@@ -155,7 +155,8 @@ const PhotoInforamtion = (data) => {
                         <img className="mr-3" src={'/icons8-bar-chart-64.svg'} alt="Views"/>
                         <div className="media-body">
                             <h5 className="mt-0">{ 'Downloads Rate' }</h5>
-                            <h5 className="mt-0">{ (data.data.downloads / data.data.views) > 0.000001 ? (data.data.downloads / data.data.views).toFixed(7) : 'Rate not available' }</h5>
+                            <h5 className="mt-0">{ (data.data.downloads / data.data.views) > 0.000001 
+                            ? (data.data.downloads / data.data.views).toFixed(7) : 'Rate not available' }</h5>
                             <p className="font-weight-light">
 
                             Die Download Rate gibt an wie oft das Foto pro Ansicht gedownloaded wurde. Unter Umständen sind diese Daten noch nicht verfügbar. 

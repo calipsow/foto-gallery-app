@@ -1,16 +1,34 @@
 import React from 'react';
-
-
+import Like from './likes';
+import { useNavigate } from 'react-router-dom'
 
 export default function DownloadButton(props){
-
+    const navigate = useNavigate()
+    const [ liked, setLike ] = React.useState(props.data.liked_by_user)
+    
+    React.useEffect(()=>{
+        console.log('useEffect ', liked) 
+        if(!window.localStorage.getItem('access_token')){
+            navigate('/user/authorization')
+        }        
+    },[liked])    
+    
     const triggerLink = (e) => {
         e.preventDefault();
         window.open(e.target.href);
     }
 
+    const handleLikeEvent = async e => {
+        console.log('handleLikeEvent')        
+        setLike(!liked)
+        console.log(liked)
+        await Like({liked: props.data.liked_by_user, photo_id: props.data.id, token: window.localStorage.getItem('access_token')})
+        
+    }
 
     const triggerDownloaded = (e) => {
+
+
         e.preventDefault();
         const key = generateKey();
         
@@ -41,8 +59,9 @@ export default function DownloadButton(props){
         return s4() + s4() + '-' + s4() + '-' + new Date().getTime();
     }
 
-
+    console.log(props.data)
     return (
+        <>
         <div className="btn-group btn-group-toggle" data-toggle="buttons">
             <label className="btn btn-secondary active" onClick={ e => triggerDownloaded(e) } >
                 <input type="radio" name="options" id="option1" autoComplete="off" readOnly={true}                   
@@ -54,5 +73,14 @@ export default function DownloadButton(props){
                 > View on Unsplash </a>
             </label>
         </div>
+        <div class="btn-group" role="group" aria-label="Basic example" style={{marginLeft: '10px'}} onClick={ e => handleLikeEvent(e) }>
+            <button type="button" className="btn btn-secondary">
+                    { 
+                    liked 
+                    ? <i className='fas fa-heart' style={{fontSize:'20px', color:'red'}}></i> 
+                    : <i className='far fa-heart' style={{fontSize:'20px'}}></i>}
+            </button>
+        </div>
+        </>
     )
 }

@@ -2,7 +2,8 @@ import React from 'react';
 import './LikedPhotos.css'
 import Loader from '../../loader/Loader'
 import NoResults from './../../assets/NoResults';
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import Like from '../../assets/likes';
 export default class LikedPhotos extends React.Component {
     constructor(props){
         super(props);
@@ -36,7 +37,7 @@ export default class LikedPhotos extends React.Component {
             
             <p  key={k} style={{textAlign: 'center', margin: '15px'}}>
                 <Link to={'/photo/statics/'+dataSet.id} ><img id={k} className="rounded mx-auto d-block img-fluid" alt={alt} src={url} /> </Link>
-                <legend htmmlFor={k}><b>{likes+'    '}</b><i className="far fa-heart"></i></legend>
+                <LikeButton data={dataSet} k={k} />
                 <a className="btn-icons link-elem-icon"     
                         onClick={ e => this.handleDownloadEvent(e) }
                         href={dataSet.urls.small_s3}
@@ -94,4 +95,30 @@ export default class LikedPhotos extends React.Component {
             </React.Fragment>
         ) 
     }
+}
+
+const LikeButton = (props) => {
+    const navigation = useNavigate()
+    const [ liked, setLike] = React.useState(props.data.liked_by_user)
+    React.useEffect(() => {
+        if(!window.localStorage.getItem('access_token')){
+            navigation('/user/authorization')
+        }
+    },[liked])
+
+    const handleClick = async e => {
+        setLike(!liked)
+
+        await Like({token: window.localStorage.getItem('access_token'), liked: liked, photo_id: props.data.id})
+    }
+
+    return(
+        <>
+            <legend onClick={e => handleClick(e)} htmmlFor={props.k}><b>{props.data.likes+'    '}</b>
+                {
+                    liked ? <i className="fas fa-heart"></i> : <i className="far fa-heart"></i>
+                }                
+            </legend>
+        </>
+    )
 }

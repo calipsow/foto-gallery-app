@@ -2,7 +2,8 @@ import React from 'react';
 import './UserPhotos.css';
 import Loader from './../../loader/Loader'
 import NoResults from './../../assets/NoResults';
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import Like from '../../assets/likes';
 export default class UserPhotos extends React.Component {
     constructor(props){
         super(props);
@@ -16,32 +17,35 @@ export default class UserPhotos extends React.Component {
         this.data = await this.fetchUserPhotos()
         // console.log(this.data, 'aaaaaaaaaaaaaa')
         this.data.forEach( data => {
+            console.log(data)
             this.elements.push(
-                this.createElementImage(data.urls.small, data.likes, data)
+                this.createElementImage(data.urls.small, data)
             )
         })
         this.setState({loading: false})
     }
-    createElementImage = ( photoUrl, likes, dataSet ) => {
-
+    createElementImage = ( photoUrl, dataSet ) => {
+        
         return (
-            <p key={this.generateKey()} style={{textAlign: 'center'}}>
+            <div key={this.generateKey()}>
+                                        
+            <p  style={{textAlign: 'center'}}>
                 <Link to={'/photo/statics/'+dataSet.id}><img className="rounded mx-auto d-block img-fluid" src={photoUrl} alt="image" 
                 width={ 'auto' } height={'auto'} style={{margin: '20px', maxWidth: '100%', height: 'auto'}}/></Link>
-                <b>{likes+'    '}</b><i className="far fa-heart"></i>
-
-                <a className="btn-icons link-elem-icon"   
+                                
+            </p>
+            <LikeButton data={dataSet} /> 
+            <a className="btn-icons link-elem-icon"   
                         onClick={ e => this.handleDownloadEvent(e) }
                         href={dataSet.urls.small_s3}
                         target="_blank"
                         download                                                              
-                        style={{cursor:'pointer', marginLeft: '50px'}}
+                        style={{cursor:'pointer', marginLeft: '0'}}
                     >
-                        <i className="fas fa-cloud-download-alt" id={dataSet.urls.small_s3} style={{color: 'white'}}></i>
+                    <i className="fas fa-cloud-download-alt" id={dataSet.urls.small_s3} style={{color: 'white'}}></i>                                     
+                </a>
 
-                     
-                </a> 
-            </p>
+            </div>
         )
     }
 
@@ -91,10 +95,35 @@ export default class UserPhotos extends React.Component {
         return(
             <React.Fragment>
             {
-                <div style={{justifyContent: 'space-around'}} className="picture-container-main">{this.state.loading ? <Loader /> :  this.elements.length === 0 ? <NoResults /> : this.elements}</div> 
+                <div style={{justifyContent: 'space-around'}} className="picture-container-main">{this.state.loading 
+                ? <Loader /> :  this.elements.length === 0 ? <NoResults /> : this.elements}</div> 
             }
             </React.Fragment>
             
         )
     }
+}
+
+const LikeButton = (props) => {
+    const navi = useNavigate()
+    const [ liked, setLike ] = React.useState(props.data.liked_by_user)
+    React.useEffect(()=>{
+        if(!window.localStorage.getItem('access_token')){
+            navi('/user/authorization')
+        }
+    },[liked])
+
+
+    const handleClick = async () => {
+        setLike(!liked)
+
+        await Like({token: window.localStorage.getItem('access_token'), photo_id: props.data.id, liked: liked})
+    }
+
+    return (
+        <div onClick={e => handleClick(e)} >
+            { liked ? <i className="fas fa-heart" style={{fontSize:'26px'}}></i> : <i style={{fontSize:'26px'}} className="far fa-heart"></i> }
+            
+        </div>
+    )
 }
