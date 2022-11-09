@@ -32,7 +32,7 @@ class PhotostatsClass extends React.Component {
     async componentDidMount(){
         window.scrollTo(0, 0)
         this.photo = await this.fetchPhotoID()
-        console.log(this.photo)
+
         this.setState({loading: false})
     } 
 
@@ -48,7 +48,7 @@ class PhotostatsClass extends React.Component {
 
 
     render(){
-        console.log(this.props)
+
         return(
             <div className="fluid-width" style={{ width:'100%', height: '100%', backgroundColor: '#e1e2e2'}}>
                 <NavBar />
@@ -111,7 +111,7 @@ class PhotostatsClass extends React.Component {
 
 
 const PhotoInforamtion = (data) => {
-    console.log(data);
+
     const colSttyles = {
         marginTop: '30px', padding: '30px', borderRadius: '5px'
     }

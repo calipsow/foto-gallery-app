@@ -6,24 +6,25 @@ export default function DownloadButton(props){
     const navigate = useNavigate()
     const [ liked, setLike ] = React.useState(props.data.liked_by_user)
     
-    React.useEffect(()=>{
-        console.log('useEffect ', liked) 
+   
+
+
+    const handleLikeEvent = async (e) => {        
+        e.preventDefault();
+
         if(!window.localStorage.getItem('access_token')){
             navigate('/user/authorization')
-        }        
-    },[liked])    
+
+        } else {
+            setLike(!liked)
+            await Like({photo_id: props.data.id, token: window.localStorage.getItem('access_token'), liked: liked})
+        }
+    } 
+
     
     const triggerLink = (e) => {
         e.preventDefault();
         window.open(e.target.href);
-    }
-
-    const handleLikeEvent = async e => {
-        console.log('handleLikeEvent')        
-        setLike(!liked)
-        console.log(liked)
-        await Like({liked: props.data.liked_by_user, photo_id: props.data.id, token: window.localStorage.getItem('access_token')})
-        
     }
 
     const triggerDownloaded = (e) => {
@@ -59,7 +60,6 @@ export default function DownloadButton(props){
         return s4() + s4() + '-' + s4() + '-' + new Date().getTime();
     }
 
-    console.log(props.data)
     return (
         <>
         <div className="btn-group btn-group-toggle" data-toggle="buttons">
@@ -73,7 +73,7 @@ export default function DownloadButton(props){
                 > View on Unsplash </a>
             </label>
         </div>
-        <div class="btn-group" role="group" aria-label="Basic example" style={{marginLeft: '10px'}} onClick={ e => handleLikeEvent(e) }>
+        <div className="btn-group" role="group" aria-label="Basic example" style={{marginLeft: '10px'}} onClick={ e => handleLikeEvent(e) }>
             <button type="button" className="btn btn-secondary">
                     { 
                     liked 

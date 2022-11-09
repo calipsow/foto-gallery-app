@@ -17,7 +17,7 @@ export default class UserPhotos extends React.Component {
         this.data = await this.fetchUserPhotos()
         // console.log(this.data, 'aaaaaaaaaaaaaa')
         this.data.forEach( data => {
-            console.log(data)
+
             this.elements.push(
                 this.createElementImage(data.urls.small, data)
             )
@@ -105,23 +105,29 @@ export default class UserPhotos extends React.Component {
 }
 
 const LikeButton = (props) => {
-    const navi = useNavigate()
+    const navigate = useNavigate()
     const [ liked, setLike ] = React.useState(props.data.liked_by_user)
-    React.useEffect(()=>{
-        if(!window.localStorage.getItem('access_token')){
-            navi('/user/authorization')
-        }
-    },[liked])
+    
+   
+    let firstSet = true
 
 
-    const handleClick = async () => {
+    const handleLikeEvent = async (e) => {        
+        e.preventDefault();
+        firstSet = false;
         setLike(!liked)
 
-        await Like({token: window.localStorage.getItem('access_token'), photo_id: props.data.id, liked: liked})
-    }
+        if(!window.localStorage.getItem('access_token')){
+            navigate('/user/authorization')
+
+        } else {
+            await Like({photo_id: props.data.id, token: window.localStorage.getItem('access_token'), liked: liked})
+        }
+    } 
+
 
     return (
-        <div onClick={e => handleClick(e)} >
+        <div onClick={e => handleLikeEvent(e)} >
             { liked ? <i className="fas fa-heart" style={{fontSize:'26px'}}></i> : <i style={{fontSize:'26px'}} className="far fa-heart"></i> }
             
         </div>

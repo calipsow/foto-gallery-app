@@ -44,7 +44,7 @@ class SearchSiteClass extends React.Component {
     async componentDidMount(){
         window.scrollTo(0, 0)
         this.data = await this.fetchDataQuery()
-        console.log(this.data)
+
         if(this.data.total === 0 ){
             this.setState({loading: false, success: false})
             return;
@@ -68,7 +68,7 @@ class SearchSiteClass extends React.Component {
         this.setState({loading: true})
         this.elements = [];
         this.data = await this.fetchDataQuery()
-        console.log(this.data)
+
         if(this.data.total === 0 ){
             this.setState({loading: false, success: false})
             return;
@@ -262,24 +262,29 @@ class SearchSiteClass extends React.Component {
 
 const LikeButtons = (props) => {
     const navigate = useNavigate()
-    const [liked, setLike] = React.useState(props.data.liked_by_user)
-    React.useEffect(()=>{
-        if(!window.localStorage.getItem('access_token')){
-            navigate('/user/authorization')
-        }
+    const [ liked, setLike ] = React.useState(props.data.liked_by_user)
+    
+   
+    let firstSet = true
 
-    },[liked])
 
-    const handleClick = async (e) => {
-        e.preventDefault()
+    const handleLikeEvent = async (e) => {        
+        e.preventDefault();
+        firstSet = false;
         setLike(!liked)
 
-        await Like({liked: props.data.liked_by_user, token: window.localStorage.getItem('access_token'), photo_id: props.data.id})
-    }
+        if(!window.localStorage.getItem('access_token')){
+            navigate('/user/authorization')
+
+        } else {
+            await Like({photo_id: props.data.id, token: window.localStorage.getItem('access_token'), liked: liked})                    
+        }
+    } 
+
 
     return (
         <>
-        <legend onClick={e => handleClick(e) } htmmlfor={props.k}><b>{props.data.likes+'    '}</b>
+        <legend onClick={e => handleLikeEvent(e) } htmmlfor={props.k}><b>{props.data.likes+'    '}</b>
             {
                 liked ? <i className="fas fa-heart"></i> : <i className="far fa-heart"></i> 
             }                

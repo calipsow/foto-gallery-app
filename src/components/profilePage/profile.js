@@ -19,18 +19,38 @@ export default function CurrentUserProfile(){
     const refresh_token = window.localStorage.getItem('refresh_token');
 
     React.useEffect(()=>{
-        if( !access_token || !refresh_token ){
-        
+        if( !access_token || !refresh_token ){            
             navigate('/user/authorization')
         }
     },[])
 
-
     return (
-        <CurrentUserProfileClass access_token={access_token} refresh_token={refresh_token}/>
+        <CurrentUserProfileClass access_token={access_token} refresh_token={refresh_token} />
     )
 }
 
+const LogoutButton = () => { 
+    const navigation = useNavigate()
+    const [session, setSession] = React.useState(true)
+
+    React.useEffect(()=>{
+        if(session) return;
+        window.localStorage.removeItem('refresh_token')
+        window.localStorage.removeItem('access_token')
+        navigation('/user/authorization');
+
+    },[session])
+
+    const handleLogout = (e) => {
+        e.preventDefault()
+        setSession(!session)
+    }
+
+    return (
+        <a className="dropdown-item" href="#" onClick={ e => handleLogout(e) }>Logout</a>
+    )
+
+}
 
 class CurrentUserProfileClass extends React.Component {
     constructor(props) {
@@ -41,14 +61,20 @@ class CurrentUserProfileClass extends React.Component {
         this.stats = []
         this.userData = []
         this.handleClick = this.handleClick.bind(this)
+        this.handleLogout = this.handleLogout.bind(this)
+        
     }
     async componentDidMount(){
         this.userData = await this.fetchCurrentUserProfile()
         this.stats = await this.fetchData()
-        console.log(this.userData)
+
         this.setState({loading: false})
     }
-    
+    handleLogout = (e) => {
+        e.preventDefault()
+        this.props.logout_event = () => { return true }
+    }
+
     fetchData = async () => {
         return await fetch('http://localhost:3588/api/user-lookup/statics?userName='+this.userData.username)
         .then((response) => response.json())
@@ -78,7 +104,7 @@ class CurrentUserProfileClass extends React.Component {
         }
     }
     render() {
-        console.log(this.userData)
+
         if( this.state.loading ){
             return <Loader />
         }
@@ -136,7 +162,7 @@ class CurrentUserProfileClass extends React.Component {
                                     <a className="dropdown-item" id="menu-item-4" href="#" onClick={e => this.handleClick(e) }>Bearbeiten</a>
                                     <a className="dropdown-item" href="#">Stats</a>
                                     <div className="dropdown-divider"></div>
-                                    <a className="dropdown-item" href="#">Posten</a>
+                                    <LogoutButton />
                                 </div>
                             </li>
                             <li className="nav-item">

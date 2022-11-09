@@ -26,14 +26,11 @@ export default class UpdateInformation extends React.Component {
     }
 
     fetchUpdateData = async (data, query) => {
-        let result = await fetch('http://localhost:3588/api/user/authenticated/profile/update?token='+window.localStorage.getItem('access_token')+'&'+query+'='+data)
+        await fetch('http://localhost:3588/api/user/authenticated/profile/update?token='+window.localStorage.getItem('access_token')+'&'+query+'='+data)
         .then(response => response.json())
         .then(response => response.response )
         .catch(err => console.log(err) )
 
-        if(typeof result !== 'boolean'){
-            console.log(result)
-        }
     }
 
     handleChangeEvent = async (e) => {

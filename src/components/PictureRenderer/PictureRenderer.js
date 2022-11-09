@@ -54,7 +54,7 @@ export default class PictureRend extends React.Component {
 
 
     createElement = (dataSet) => {
-        console.log(dataSet)
+
         var uid = this.generateKey()
         const keys = Object.keys(dataSet.urls)
 
@@ -192,18 +192,56 @@ ttps://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=
                 <div class="card bg-dark text-white"style={{borderRadius:'0'}}>
                     <img class="card-img" src={'/sebastian-svenson-d2w-_1LJioQ-unsplash.jpg'} alt="Card logo callipson" />
                     <div class="card-img-overlay" style={{borderRadius:'0'}}>
-                    <div class="jumbotron" style={sty}>
-                            <h1 class="display-4 text-light font-weight-bold">Callipson</h1>
-                            <hr class="my-4"/>
-                            <p class="lead text-white font-weight-light" style={{fontSize:'1rem'}}>This Application is powered by Unsplash</p>
-                            
-                            
-                            </div>
+                        <div class="jumbotron" style={sty}>
+                                <h1 class="display-4 text-light font-weight-bold">Callipson</h1>
+                                <hr class="my-4"/>
+                                <p class="lead text-white font-weight-light" style={{fontSize:'1rem'}}>This Application is powered by Unsplash</p>                                                                
+                        </div>
 
                     </div>
+                </div>
+
+                <br/>
+                <div className="container text-white" style={{marginBottom: '30px', marginTop: '30px', backgroundColor: 'transparent'}}>
+                    <div className="container bg-dark" style={{padding: '30px', borderRadius: '10px'}}>
+                        <h5 className="text-center text-justify card-title mb-2 text-white font-weight-bold">
+                            Wissenswertes 
+                        </h5>
+                        <h6 className="text-center text-justify card-subtitle mb-2 text-muted text-white-50">
+                           über diese Anwendung
+                        </h6>
+                        <br/>
+                    <div className="card  bg-light text-black">
+                        
+                        <div className="card-body text-dark">
+                            <p className="card-text  font-weight-normal text-center">
+                                Die Bilder und Nutzerdaten die hier zu finden sind werden von 
+                                <a style={{textDecoration: 'none'}} rel="noreferrer" className="card-link font-weight-light " href="https://unsplash.com/" target="_blank" > Unsplash </a>
+                                bereitgestellt.
+                                Unsplash ist eine der größten Platformen für Stock Bilder, die der freien Nutzung zur Verfügung stehen.
+                                <hr/>
+                                Hinzu ist Unsplash ein Ort an dem User ihre Bilder der Welt präsentieren und bereitstellen können.
+                                Dadurch wird die Vermittlung von professionellen Künstlern und Fotografen an potenzielle 
+                                Auftraggeber ermöglicht.
+                                <hr/>
+                                Auch ein Einkommen über Spenden, der Nutzer die Gefallen an den Bildern haben, ist keine Seltenheit.
+
+                                Werde auch du ein Teil der <a style={{textDecoration: 'none'}} rel="noreferrer" className="card-link font-weight-light" href="https://unsplash.com/" target="_blank" >Unsplash Community</a>, wenn du es noch nicht bist.
+                            </p>
+                        </div>
+                        <br/>
                     </div>
+                    <br/>
+                    <div className="container">
+                            <a class="btn btn-primary btn-lg btn-block bg-light text-black border border-dark" 
+                            style={{textDecoration: 'none'}}  
+                            href="https://unsplash.com/" rel="noreferrer"
+                            target="_blank" >Unsplash Community</a>
 
-
+                        </div>
+                        
+                    </div>
+                </div>
                 <div className="picture-container-main">
                     
                         { this.state.elements.length === 0 ? <Loader/> : this.state.elements.map( elem => elem )  }
@@ -220,19 +258,18 @@ ttps://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=
 const LikeButton = (props) => {
     const navigate = useNavigate()
     const [ liked, setLike ] = React.useState(props.liked_by_user)
-
-    React.useEffect(() => {
-        if(!window.localStorage.getItem('access_token')){
-            navigate('/user/authorization')
-        }
-        
-    },[liked])
-
+ 
     const handleLikeEvent = async (e) => {        
         e.preventDefault();
+ 
         setLike(!liked)
-        let status = await Likes({photo_id: props.photo_id, token: window.localStorage.getItem('access_token'), liked: liked})
-        console.log(status)        
+
+        if(!window.localStorage.getItem('access_token')){
+            navigate('/user/authorization')
+
+        } else {
+            await Likes({photo_id: props.photo_id, token: window.localStorage.getItem('access_token'), liked: liked})    
+        }
     } 
 
     return(

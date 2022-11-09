@@ -8,7 +8,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 html{
-  margin: 0; padding: 0;
+  margin: 0; padding: 0; background-color: #e1e2e2;
 }
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
