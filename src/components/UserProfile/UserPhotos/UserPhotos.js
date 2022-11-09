@@ -62,8 +62,7 @@ export default class UserPhotos extends React.Component {
     handleDownloadEvent = (e) => {
         e.preventDefault();
         const key = this.generateKey();
-        console.log(e.target.id)
-        console.log(e.target.id)
+
 
         fetch(e.target.id, {
             method: "GET",

@@ -60,10 +60,8 @@ export default class ContactComponent extends React.Component {
                 document.querySelectorAll('#'+id)[0].value = '';
             })
             this.setState({success: await this.requestForm( data )})
-            console.log("valid")
         }else{
-
-            console.log("not valid")
+            //? Write Fallback
         }
         
     } 

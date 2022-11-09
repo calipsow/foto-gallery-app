@@ -2,7 +2,6 @@ import React from 'react';
 import './PictureRend.css'
 import { Link } from 'react-router-dom'
 import Loader from '../loader/Loader';
-import Unsplash from './../assets/unsplash'; 
 
 export default class PictureRend extends React.Component {
     constructor(props){
@@ -19,7 +18,6 @@ export default class PictureRend extends React.Component {
     async componentDidMount(){
         window.scrollTo(0, 0)
         this.data = await this.fetchData();
-        console.log(this.data);
         this.data.forEach( dataSet => {
             this.elements.push(
                 this.createElement(dataSet)
@@ -45,7 +43,6 @@ export default class PictureRend extends React.Component {
 
     handleLoadMore = async () => {
         this.data = await this.fetchData()
-        console.log(this.data)
         this.data.forEach(dataSet => {            
 
             this.elements.push(this.createElement(dataSet))
@@ -64,7 +61,6 @@ export default class PictureRend extends React.Component {
             if(key === 'raw' || key === 'small_s3') return;
             srcSet += dataSet.urls[key] + key === 'thumb' ? dataSet.urls[key]+' 200w, ' : key === 'small' ? dataSet.urls[key]+' 400w, ' : key === 'regular' ? dataSet.urls[key]+' 1080w, ' : key === 'full' ? dataSet.urls[key]+' 2080w, ' : '' 
         })
-        console.log(dataSet)
         
         return (
             <React.Fragment key={uid}>
@@ -83,15 +79,17 @@ export default class PictureRend extends React.Component {
                         className="img-generatet rounded mx-auto d-block"
                         id={uid}
                         src={ dataSet.urls.small.split('&').includes('w=400') ? dataSet.urls.regular : dataSet.urls.small }
-                        alt={ dataSet.user.name }                
-                    ></img>
+                        alt={ dataSet.user.name }    
+
+                        ></img>
                 </Link>
 
                 {dataSet.user.samsungmemory}
                 </p>
                 <div className="container-user-info">
                     <Link to={'/user-profile/'+dataSet.user.username} style={{textDecoration: 'none', cursor: 'pointer'}}>
-                        <img                            
+                        <img                      
+                            alt={dataSet.username}      
                             id={uid}
                             src={dataSet.user.profile_image.medium}
                             width={'56px'}
@@ -118,6 +116,7 @@ export default class PictureRend extends React.Component {
                         target="_blank"
                         download                                                              
                         style={{cursor:'pointer'}}
+                        rel={'noreferrer'}
                     >
                         <i className="fas fa-cloud-download-alt" id={dataSet.urls.small_s3} style={{color: 'white'}}></i>
 
@@ -126,7 +125,7 @@ export default class PictureRend extends React.Component {
                     }
                    
                 </div>
-                <a className="btn-icons link-elem-icon" href={dataSet.links.html} target="_blank" style={{color: 'black', marginLeft: '0', position: 'absolute', top: '1px', right: '10px'}}>                 
+                <a className="btn-icons link-elem-icon" rel={'noreferrer'} href={dataSet.links.html} target="_blank" style={{color: 'black', marginLeft: '0', position: 'absolute', top: '1px', right: '10px'}}>                 
                     {<i className="fa fa-link" style={{color: 'white'}}></i>}
                 </a>              
                 </div>
@@ -144,8 +143,7 @@ export default class PictureRend extends React.Component {
     handleDownloadEvent = (e) => {
         e.preventDefault();
         const key = this.generateKey();
-        console.log(e.target.id)
-        console.log(e.target.id)
+
 
         fetch(e.target.id, {
             method: "GET",
@@ -189,7 +187,7 @@ ttps://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=
         return (
             <React.Fragment>
                 <div class="card bg-dark text-white"style={{borderRadius:'0'}}>
-                    <img class="card-img" src={'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2560&q=80'} alt="Card image" />
+                    <img class="card-img" src={'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2560&q=80'} alt="Card logo callipson" />
                     <div class="card-img-overlay" style={{borderRadius:'0'}}>
                     <div class="jumbotron" style={{backgroundColor:'rgba(170,170,170,.2)', backdropFilter:'blur(2px)'}}>
                             <h1 class="display-4">Callipson</h1>

@@ -9,7 +9,6 @@ import { Link } from 'react-router-dom'
 import Loader from '../loader/Loader';
 import NoResults from './../assets/NoResults';
 import FooterComponent from '../footer/footer';
-import Unsplash from './../assets/unsplash';
 
 export default function SearchSite(){
     let { query } = useParams();
@@ -60,11 +59,12 @@ class SearchSiteClass extends React.Component {
 
     async componentDidUpdate(){
         if( this.query === this.props.query ) return;
+        window.scrollTo(0, 0)
         this.query = this.props.query 
         this.setState({loading: true})
         this.elements = [];
         this.data = await this.fetchDataQuery()
-        console.log(this.data)
+
         if(this.data.total === 0 ){
             this.setState({loading: false, success: false})
             return;
@@ -184,7 +184,7 @@ class SearchSiteClass extends React.Component {
 
             <React.Fragment>
                 <NavBar />
-                <div className="card bg-dark text-white"style={{borderRadius:'0', minHeight: '500px'}}>
+                <div className="card bg-dark text-white"style={{borderRadius:'0', minHeight: '250px'}}>
                     { 
                         !this.state.errorLoading ? 
                         <img className="card-img" src={this.temporarilyUpdate.url} alt={this.temporarilyUpdate.alt} 

@@ -79,7 +79,12 @@ class NavBarV2 extends React.Component{
                     </a>
                     <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                     <Link className="dropdown-item" to={'/'}>Startseite</Link>
-                    <Link to={'/user/login'} className="dropdown-item">Login</Link>
+                    {
+                        !window.localStorage.getItem('access_token') || !window.localStorage.getItem('refresh_token') 
+                        ? <Link to={'/user/authorization'} className="dropdown-item">Login</Link>
+                        : <Link to={'/user/current/profile/'} className="dropdown-item">Account</Link>
+                    
+                    }
                     <div className="dropdown-divider"></div>
                     <Link to={'/contact'} className="dropdown-item" href="#">Kontakt</Link>
                     </div>
@@ -104,7 +109,7 @@ class NavBarV2 extends React.Component{
 const Navigation = (prop) => {
 
     const [ queryStr, setQueryStr ] = useState(prop.query)
-    console.log( queryStr )
+
     useEffect(()=>{
         setQueryStr(prop.query.replace(/[\s]/g, '-'))
     },[prop])

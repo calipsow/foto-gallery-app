@@ -6,17 +6,8 @@ import Loader from './../loader/Loader';
 import UserPhotos from './UserPhotos/UserPhotos';
 import LikedPhotos from './LikedPhotos/LikedPhotos';
 import FooterComponent from './../footer/footer';
-import Trend from 'react-trend'
-import { Line } from 'react-chartjs-2'
 import Statistics from './../assets/statics';
-import { 
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Legend    
-} from 'chart.js'
+
 class UserProfileClass extends React.Component {
     constructor(props) {
         super(props);
@@ -29,7 +20,6 @@ class UserProfileClass extends React.Component {
         this.handleViewChange = this.handleViewChange.bind(this)
     }
     getUserProfile = async () => {
-        console.log(this.props.user_id)
         return await fetch('http://localhost:3588/api/user-lookup?userName='+this.props.user_id,{'cors':'no-cors'})
         .then(response =>  response.json())
         .then(response => response.response )
@@ -40,7 +30,6 @@ class UserProfileClass extends React.Component {
         this.data = await this.getUserProfile(this.user_id)
         this.createTags()
         this.setState({loading: false})
-        console.log(this.data)
     }
 
     createTags = () => {
@@ -126,7 +115,8 @@ class UserProfileClass extends React.Component {
                             </ul>
                         </div>
                         {
-                            this.state.PhotoView ? <UserPhotos username={this.data.username}/> : this.state.LikedPhotos ? <LikedPhotos username={this.data.username}></LikedPhotos> : this.state.Statistics 
+                            this.state.PhotoView ? <UserPhotos username={this.data.username}/> : this.state.LikedPhotos ? <LikedPhotos username={this.data.username}></LikedPhotos> 
+                            : this.state.Statistics
                             ? 
                             <div className="container fluid-width" style={{paddingBottom: '50px'}}>
                             <Statistics url={'http://localhost:3588/api/user-lookup/statics?userName='+this.data.username}/> </div> 
@@ -144,11 +134,12 @@ class UserProfileClass extends React.Component {
     }
 
 }
+/*
 const generateKey = () => {
     const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
     return s4() + s4() + '-' + s4() + '-' + new Date().getTime();
 }
-
+*/
 
 
 export default function UserProfile () {
@@ -159,6 +150,7 @@ export default function UserProfile () {
         <UserProfileClass user_id={user_id} />
     )
 }
+/*
 class UserStatistics extends React.Component {
     constructor(props) {
         super(props)
@@ -268,4 +260,4 @@ class UserStatistics extends React.Component {
         )
     }
 }
-
+*/

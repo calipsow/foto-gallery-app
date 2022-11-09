@@ -2,25 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import NavBar from './../Navbar/Navbar'
 import FooterComponent from './../footer/footer';
-import { Chart } from 'react-chartjs-2'
-import Trend from 'react-trend'
 import Statistics from './../assets/statics';
-
-
-import { 
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Legend    
-} from 'chart.js'
 import Loader from './../loader/Loader';
+import DownloadButton from './../assets/downloadButton';
 
 export default function Photostats(){
     let { photo_id } = useParams()
     const [ query, setQuery ] = useState(photo_id)
-
+    window.scrollTo(0, 0)
     useEffect(()=>{
 
         setQuery(photo_id)
@@ -41,8 +30,9 @@ class PhotostatsClass extends React.Component {
         }
     }
     async componentDidMount(){
+        window.scrollTo(0, 0)
         this.photo = await this.fetchPhotoID()
-        console.log(this.data, this.photo)
+        console.log(this.photo)
         this.setState({loading: false})
     } 
 
@@ -58,8 +48,9 @@ class PhotostatsClass extends React.Component {
 
 
     render(){
+        console.log(this.props)
         return(
-            <div className="fluid-width" style={{ width:'100%', height: '100%'}}>
+            <div className="fluid-width" style={{ width:'100%', height: '100%', backgroundColor: '#e1e2e2'}}>
                 <NavBar />
                 {
                     !this.state.loading ?
@@ -67,18 +58,40 @@ class PhotostatsClass extends React.Component {
                     <div className="card">
 
                     <div className="card-body">
-                            <Link style={{textDecoration: 'none', color: 'black'}} to={'/user-profile/'+this.photo.user.username}> <h5 className="card-title">{this.photo.user.first_name+'  '+this.photo.user.last_name}</h5></Link>
-                            <p className="card-text">{this.photo.user.bio || ''}</p>
-                            <p className="card-text"><small className="text-muted">Overview</small></p>
+                        <div className="user-profile-image-container" style={{marginLeft: '0'}}>
+                        <Link style={{textDecoration: 'none', color: 'black'}} to={'/user-profile/'+this.photo.user.username}> 
+                            <img
+                                alt={this.photo.username}
+                                id={this.photo.id}
+                                className={'img-generatet'}
+                                src={ this.photo.user.profile_image.large }
+                                width={'115px'} height={'115px'}
+                                style={{borderRadius: '100%'}}
+                            >
+                            </img>
+                        </Link>
+                            <label htmmlFor={this.photo.id} className="profile-username-header">                            
+                                { this.photo.badge === undefined || null ? this.photo.name : this.photo.badge.slug === 'verified' ? <i className="fas fa-check-circle">{'      '+ this.photo.name}</i> : this.data.name  }
+                            </label>
+                            </div>
+
+                        <Link style={{textDecoration: 'none', color: 'black'}} to={'/user-profile/'+this.photo.user.username}> <h5 className="card-title">{this.photo.user.first_name+'  '+this.photo.user.last_name}</h5></Link>
+                        <p className="card-text">{this.photo.user.bio || ''}</p>
+                        <p className="card-text"><small className="text-muted">Overview</small></p>
+                        <DownloadButton data={this.photo} />
                     </div>
                  
                     <img className="card-img-bottom" src={this.photo.urls.regular} alt={this.photo.alt_description || this.photo.exif.name || 'image'} />
                     </div>
-                    <div className="container fluid-width" >
-                    
-                        
+                    <div class="card">
+                        <div class="card-body">
+                            <h2 className="card-text text-center">Photo Trends</h2>
+                        </div>
+                    </div>
+                    <div className="container fluid-width" >                                        
                         <Statistics url={'http://localhost:3588/api/photo-lookup/statics?photoID='+this.props.photo_id} />
                     </div>
+                    <PhotoInforamtion data={this.photo} />
                     <RelatedPhotos data={this.photo} />
                     </>
                     : <div style={{width: '100%', height: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center'}}> <Loader></Loader> </div>
@@ -88,111 +101,82 @@ class PhotostatsClass extends React.Component {
         )
     }
 }
-/*
-const Statistics__ = (props) => {
 
-    const [ data, setData ] = useState(props.data)
-    let dowloadDate = [], dowloadValues = [], viewDate = [], viewValues = [], likesDate = [], likesValues = []
 
-    ChartJS.register(
-        CategoryScale, LinearScale, PointElement, LineElement, Legend
-    )
 
-    useEffect(()=>{
+const PhotoInforamtion = (data) => {
+    console.log(data);
+    const colSttyles = {
+        marginTop: '30px', padding: '30px', borderRadius: '5px'
+    }
+    return(
+        <div className="container">
+            <div className="column">
+                <div className="col text-white bg-dark" style={colSttyles}>
+                    <div className="media text-white bg-dark" >
+                        <img className="mr-3" src={'/icons8-heart-64.svg'} alt="Like"/>
+                        <div className="media-body">
+                            <h5 className="mt-0">{ 'Likes' }</h5>
+                            <h5 className="mt-0">{ data.data.likes }</h5>
+                            Hier siehst du sämtliche, seid der Veröffentlichung, bekommenen Likes von Nutzern der Unsplash Platform. 
+                        </div>
+                    </div>
+                </div>
+                <div className="col text-white bg-dark" style={colSttyles}>
+                <div className="media text-white bg-dark" >
+                        <img className="mr-3" src={'/icons8-scroll-down-64.svg'} alt="Download"/>
+                        <div className="media-body">
+                            <h5 className="mt-0">{'Downloads'}</h5>
+                            <h5 className="mt-0">{ data.data.downloads }</h5>
 
-        dowloadDate = []; dowloadValues = []; viewDate = []; viewValues = []; likesDate = []; likesValues = []
+                            <p className="font-weight-light">
+                                Jeder Download auf Unsplash wird registriert und gezählt, hier ist die Summe aller Downloads jemals.    
+                            </p> 
+                        </div>
+                    </div>
+                    
+                </div>
+                <div className="col text-white bg-dark" style={colSttyles}>
+                <div className="media text-white bg-dark" >
+                        <img className="mr-3" src={'/icons8-cbs-64.svg'} alt="Views"/>
+                        <div className="media-body">
+                            <h5 className="mt-0">{'Views' }</h5>
+                            <h5 className="mt-0">{ data.data.views }</h5>
+                            <p className="font-weight-light">
+                                Durch das Aufrufen des Bildes auf Unsplash wird ein neuer View erzeugt und zur Summe der totalen Views gezählt.
 
-        data.downloads.historical.values.forEach( data => {
-            dowloadDate.push( data.date )
-            dowloadValues.push( parseInt( data.value ) )
-        })
-        
-    
-        data.views.historical.values.forEach( data => {
-            viewDate.push( data.date )
-            viewValues.push( parseInt(data.value) )
-        })
+                            </p>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div className="col text-white bg-dark" style={colSttyles}>
+                <div className="media text-white bg-dark">
+                        <img className="mr-3" src={'/icons8-bar-chart-64.svg'} alt="Views"/>
+                        <div className="media-body">
+                            <h5 className="mt-0">{ 'Downloads Rate' }</h5>
+                            <h5 className="mt-0">{ (data.data.downloads / data.data.views) > 0.000001 ? (data.data.downloads / data.data.views).toFixed(7) : 'Rate not available' }</h5>
+                            <p className="font-weight-light">
 
-        data.likes.historical.values.forEach( data => {
-            likesDate.push( data.date )
-            likesValues.push( parseInt(data.value) )
-        })    
-        
-    },[props])
-
-        data.downloads.historical.values.forEach( data => {
-            dowloadDate.push( data.date )
-            dowloadValues.push( parseInt( data.value ) )
-        })
-        
-    
-        data.views.historical.values.forEach( data => {
-            viewDate.push( data.date )
-            viewValues.push( parseInt(data.value) )
-        })
-
-        data.likes.historical.values.forEach( data => {
-            likesDate.push( data.date )
-            likesValues.push( parseInt(data.value) )
-        })  
-    
-
-    return (
-        <>
-        <div className="card w-100 text-white bg-dark" style={{marginTop: '50px'}}>
-            <div className="card-body">
-            <h5 className="card-title" style={{marginLeft: '50px'}}>{'Downloads Trend: '+data.downloads.total}</h5>
-                <Trend type="line"  data={dowloadValues} gradient={['#fff','#ddd','#eee']} padding={1.5} 
-                 smooth autoDraw autoDrawDuration={300} autoDrawEasing="ease-out" radius={1.5} strokeWidth={0.7} strokeLinecap={'butt'}
-                />
-                <p className="card-text" style={{marginLeft: '50px', marginTop: '50px'}}>
-                    <span className="align-baseline">{
-                        dowloadDate.shift().split('-')[2]+'.'+dowloadDate.shift().split('-')[1]+'.'+dowloadDate.shift().split('-')[0]+'   -    '+dowloadDate.pop().split('-')[2]+'.'+dowloadDate.pop().split('-')[1]+'.'+dowloadDate.pop().split('-')[0]
-                    }</span>
-                </p>
-
-            </div>
-        </div>
-
-        <div className="card w-100 text-white bg-dark" style={{marginTop: '50px'}}>
-            <div className="card-body">
-            <h5 className="card-title" style={{marginLeft: '50px'}}>{'Views Trend: '+data.views.total}</h5>
-                <Trend type="line"   data={viewValues} gradient={['#fff','#ddd','#eee']} padding={1.5} 
-                 smooth autoDraw autoDrawDuration={300} autoDrawEasing="ease-out" radius={1.5} strokeWidth={0.7} strokeLinecap={'butt'} />
+                            Die Download Rate gibt an wie oft das Foto pro Ansicht gedownloaded wurde. Unter Umständen sind diese Daten noch nicht verfügbar. 
+                            </p>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div className="w-100"></div>
                 
-                <p className="card-text" style={{marginLeft: '50px', marginTop: '50px'}}>
-                    <span className="align-baseline">{
-                        viewDate.shift().split('-')[2]+'.'+viewDate.shift().split('-')[1]+'.'+viewDate.shift().split('-')[0]+'   -    '+viewDate.pop().split('-')[2]+'.'+viewDate.pop().split('-')[1]+'.'+viewDate.pop().split('-')[0]
-                    }</span>
-                </p>
-
             </div>
         </div>
-
-        <div className="card w-100 text-white bg-dark" style={{marginTop: '50px'}}>
-            <div className="card-body">
-            <h5 className="card-title" style={{marginLeft: '50px'}}>{'Likes Trend last 30 days: '+data.likes.total}</h5>
-                <Trend type="line"   data={likesValues} gradient={['#fff','#ddd','#eee']} padding={1.5} 
-                 smooth autoDraw autoDrawDuration={300} autoDrawEasing="ease-out" radius={1.5} strokeWidth={0.7} strokeLinecap={'butt'} />
-
-                <p className="card-text" style={{marginLeft: '50px', marginTop: '50px'}}>
-                    <span className="align-baseline">{
-                        likesDate.shift().split('-')[2]+'.'+likesDate.shift().split('-')[1]+'.'+likesDate.shift().split('-')[0]+'   -    '+likesDate.pop().split('-')[2]+'.'+likesDate.pop().split('-')[1]+'.'+likesDate.pop().split('-')[0]
-                    }</span>
-                </p>
-
-            </div>
-        </div>
-        
-        </>
     )
 }
-*/
+
 const createElementImage = (url, alt, id) => {
     
     const handleEvent= (e) => {
 
         setTimeout(() => {
+            window.scrollTo(0, 0)
             window.location.reload()
         },50)
         
@@ -204,12 +188,9 @@ const createElementImage = (url, alt, id) => {
 
     return(
         <Link to={'/photo/statics/'+id} onClick={e => handleEvent(e)} key={generateKey()}>
-        <div className="card">
+        <div className="card" style={{marginLeft:'auto', marginRight:'auto', backgroundColor:'transparent', marginBottom:'50px'}}>
             
                 <img className="card-img-top" src={url} alt={alt} />
-            
-            <div className="card-body">            
-            </div>
             
         </div>
         </Link>
@@ -227,16 +208,17 @@ const RelatedPhotos = (props) => {
 
  
     return (
-        <div style={{marginTop: '150px'}} className="container fluid-width">
+        <div style={{marginTop: '150px', backgroundColor: 'traparent'}} className="container-fluid fluid-width">
             <div class="card">
-            <div class="card-body">
+            <div class="card-body" >
                 <p className="card-text text-center">Ähnliche Bilder</p>
             </div>
             </div>
         
             <div className="container fluid-width card-group" style={{marginTop: '50px'}}>
-
+                
                 { elements.length > 0 ? elements.map( el => el ) : <></> }
+                
             </div>
         </div>
     )

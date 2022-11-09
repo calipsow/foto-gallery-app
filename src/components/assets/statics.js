@@ -1,5 +1,6 @@
 import { Bar } from "react-chartjs-2";
 import React from "react"
+import Loader from "../loader/Loader";
 import { 
     Chart as ChartJS,
     CategoryScale,
@@ -29,9 +30,13 @@ export default class Statistics extends React.Component {
 
     async componentDidMount(){
         if(this.data.length !== 0 || !this.state.loading ) return;
-
-        let dataset = await this.fetchData();
-        console.log(dataset)
+        let dataset = null
+        
+        if( !this.props.dataSet ){
+            dataset = await this.fetchData();
+        
+        } else dataset = this.props.dataSet
+        
         const keys = Object.keys(dataset);
 
         let dataObj = {}
@@ -61,9 +66,10 @@ export default class Statistics extends React.Component {
         let oKeys = Object.keys(dataObj)
 
         oKeys.forEach( key => {
+
             this.data.push(
                 {
-                    labels: dataObj[key].labels,
+                    labels: dataObj[key].labels.map( label => { let ar = label.split('-'); return ar[2]+'.'+ar[1]} ),
                     // datasets is an array of objects where each object represents a set of data to display corresponding to the labels above. for brevity, we'll keep it at one object
                     datasets: [
                         {
@@ -86,24 +92,20 @@ export default class Statistics extends React.Component {
         
 
         
-        console.log( this.data )
         let check = {}
 
         oKeys.forEach(key => {
             check[key] = true
         })
         this.arr = []
-        console.log(check)
         this.elements = []
         this.data.forEach( chartData => {
-            if( !check[chartData.datasets[0].labels] ){ console.log(chartData.datasets[0].labels,'returned'); return };            
+            if( !check[chartData.datasets[0].labels] ){ return };            
 
 
             if( check[chartData.datasets[0].labels] ){
                 check[chartData.datasets[0].labels] = false
   
-                    console.log(check)
-                    console.log(chartData)
                     
                     this.elements.push(
                         this.BarChart({chartData})
@@ -118,19 +120,19 @@ export default class Statistics extends React.Component {
         this.setState({loading: false})
     }
     BarChart = ({ chartData }) => {
-
+        
         return (
 
         <div className="card w-100 text-white bg-dark" style={{marginTop: '50px'}} key={this.generateKey()}>
             <div className="card-body">
-            <h5 className="card-title" style={{marginLeft: '50px'}}>{chartData.datasets[0].labels.toUpperCase()+ ' Trend last 30 days'}</h5>
+            <p className="text-sm-left" style={{marginLeft: '50px'}}>{chartData.datasets[0].labels.toUpperCase()+ ' Trend last 30 days'}</p>
             <Bar
                 data={chartData}
                 options={{
                 plugins: {
                     title: {
                     display: true,
-                    text: ""
+                    text: chartData.datasets[0].labels.toUpperCase() || 'Chart'
                     },
                     legend: {
                     display: true,
@@ -159,7 +161,7 @@ export default class Statistics extends React.Component {
     render(){
         return (
             <div>
-                { !this.state.loading ? this.elements : <div>Loading...</div>}
+                { !this.state.loading ? this.elements : <Loader></Loader>}
             </div>
         )
     }
