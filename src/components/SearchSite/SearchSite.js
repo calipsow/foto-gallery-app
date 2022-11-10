@@ -50,7 +50,7 @@ class SearchSiteClass extends React.Component {
             return;
         }
         this.data.results.forEach(dataSet => {
-            this.temporarilyUpdate.url = dataSet.urls.regular; 
+            this.temporarilyUpdate.url = dataSet.urls.full; 
             this.temporarilyUpdate.alt = dataSet.alt_description; 
             this.temporarilyUpdate.likes = dataSet.likes; 
             this.temporarilyUpdate.data = dataSet
@@ -74,7 +74,7 @@ class SearchSiteClass extends React.Component {
             return;
         }
         this.data.results.forEach(dataSet => {
-            this.temporarilyUpdate.url = dataSet.urls.regular; 
+            this.temporarilyUpdate.url = dataSet.urls.full; 
             this.temporarilyUpdate.alt = dataSet.alt_description; 
             this.temporarilyUpdate.likes = dataSet.likes; 
             this.temporarilyUpdate.data = dataSet
@@ -100,29 +100,17 @@ class SearchSiteClass extends React.Component {
     createElementImage = (url, alt, likes, dataSet) => {
         const k = this.generateKey()
         return(
-            <p key={k} style={{textAlign: 'left', margin: '15px'}}>
-                <Link to={'/photo/statics/'+dataSet.id}> 
-                <img id={k} className="rounded mx-auto d-block img-fluid" alt={alt} src={url} /></Link>
-                <LikeButtons k={k} data={dataSet} />
-                <Link style={{textDecoration: 'none', color: 'black', fontWeight: 'bold'}} 
-                to={'/user-profile/'+dataSet.user.username}>{dataSet.user.username.toUpperCase()}</Link> 
-
-                <a className="btn-icons link-elem-icon"     
-                        onClick={ e => this.handleDownloadEvent(e) }
-                        href={dataSet.urls.small_s3}
-                        target="_blank"
-                        download                                                              
-                        style={{cursor:'pointer', marginLeft: '50px'}}
-                    >
-                        <i className="fas fa-cloud-download-alt" id={dataSet.urls.small_s3} style={{color: 'white'}}></i>
-
-                     
-                </a> 
-                <a className="btn-icons" href={dataSet.links.html} target="_blank" style={{color: 'black', marginLeft: '50px'}}>                 
-                    {<i className="fa fa-link" style={{color: 'white'}}></i>}
-                </a>
-                
-            </p>
+                <figure key={k} className="figure" style={{margin: 'auto'}}>
+                    <Link to={'/photo/statics/'+dataSet.id}> 
+                    <img id={k} className="rounded mx-auto d-block img-fluid" alt={alt} src={url} /></Link>
+                    <figcaption class="figure-caption">
+                        
+                        <Link style={{textDecoration: 'none', color: 'black', fontWeight: 'bold'}} 
+                        to={'/user-profile/'+dataSet.user.username}>{dataSet.user.username.toUpperCase()}</Link>
+                        <LikeButtons k={k} data={dataSet} />
+                    </figcaption>
+    
+                </figure>
         )
     }
 
@@ -182,15 +170,17 @@ class SearchSiteClass extends React.Component {
         });
         
     }
+    
     handleError = (err) => {
         this.setState({errorLoading: true})
     }
     getDescription = (data, style) => {
-        let arr = data.tags.map( tag => {
-            if(!!tag.source){
+        let arr = []
+        data.tags.forEach( tag => {
+            if(!!tag.source && arr.length <= 0 ){
                 let str = tag.source.description || tag.source.title || tag.source.meta_description
-                return str
-            } 
+                arr.push(str)                
+            } else return
         })
         if(!arr[0]){ 
             let str = data.alt_description || data.description || data.user.bio || data.user.location || data.user.username
@@ -238,7 +228,8 @@ class SearchSiteClass extends React.Component {
                 </div>
 
 
-                <div style={{paddingTop: '20px', justifyContent: 'center', backgroundColor: '#e1e2e2'}} className="d-flex align-content-around flex-wrap">
+                <div style={{paddingTop: '20px', justifyContent: 'strech', backgroundColor: '#e1e2e2'}} 
+                className="d-flex flex-wrap container-fluid">
                     {
                         this.state.loading && this.state.success === null ? <Loader />
                         : !this.state.success && !this.state.loading  ? <NoResults/> 
@@ -264,13 +255,8 @@ const LikeButtons = (props) => {
     const navigate = useNavigate()
     const [ liked, setLike ] = React.useState(props.data.liked_by_user)
     
-   
-    let firstSet = true
-
-
     const handleLikeEvent = async (e) => {        
         e.preventDefault();
-        firstSet = false;
         setLike(!liked)
 
         if(!window.localStorage.getItem('access_token')){
@@ -280,14 +266,57 @@ const LikeButtons = (props) => {
             await Like({photo_id: props.data.id, token: window.localStorage.getItem('access_token'), liked: liked})                    
         }
     } 
+    const generateKey = () => {
+        const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+        return s4() + s4() + '-' + s4() + '-' + new Date().getTime();
+    }
 
+    const handleDownloadEvent = (e) => {
+        e.preventDefault();
+        const key = generateKey();    
+
+        fetch(e.target.id, {
+            method: "GET",
+            headers: {
+                'cors':'no-cors'
+            }
+        })
+        .then(response => {
+            response.arrayBuffer().then(function(buffer) {
+            const url = window.URL.createObjectURL(new Blob([buffer]));
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", key+'.jpeg'); //or any other extension
+            document.body.appendChild(link);
+            link.click();
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        });
+        
+    }
 
     return (
         <>
-        <legend onClick={e => handleLikeEvent(e) } htmmlfor={props.k}><b>{props.data.likes+'    '}</b>
+        <legend  htmmlfor={props.k}><b>{props.data.likes+'    '}</b>
             {
-                liked ? <i className="fas fa-heart"></i> : <i className="far fa-heart"></i> 
-            }                
+                liked ? <i onClick={e => handleLikeEvent(e) } className="fas fa-heart" style={{cursor:'pointer'}}></i> 
+                : <i onClick={e => handleLikeEvent(e) } style={{cursor:'pointer'}} className="far fa-heart"></i> 
+            }       
+            <a className="btn-icons" rel="noreferrer" href={props.data.links.html} target="_blank" style={{color: 'black', marginLeft: '50px'}}>                 
+                {<i className="fa fa-link" style={{color: 'white'}}></i>}
+            </a>         
+            <a className="btn-icons link-elem-icon"     
+                onClick={ e => handleDownloadEvent(e) }
+                href={props.data.urls.small_s3}
+                target="_blank"
+                download               
+                rel="noreferrer"                                               
+                style={{cursor:'pointer', marginLeft: '50px'}}
+            >
+                <i className="fas fa-cloud-download-alt" id={props.data.urls.small_s3} style={{color: 'white'}}></i>                     
+            </a>
         </legend>
         </>
     )

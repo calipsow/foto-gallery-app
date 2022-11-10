@@ -84,10 +84,11 @@ class PhotostatsClass extends React.Component {
                         <p className="card-text"><small className="text-muted">Overview</small></p>
                         <DownloadButton data={this.photo} />
                     </div>
-                 
-                    <img 
-                    className="card-img-bottom" src={this.photo.urls.regular} 
-                    alt={this.photo.alt_description || this.photo.exif.name || 'image'} />
+                        <img 
+                        className="img-fluid" src={this.photo.urls.full} 
+                        alt={this.photo.alt_description || this.photo.exif.name || 'image'} />
+                        
+                    
                     </div>
                     <div class="card">
                         <div class="card-body">

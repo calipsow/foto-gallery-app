@@ -59,7 +59,8 @@ class NavBarV2 extends React.Component{
     render(){
         return (
             <>
-            <nav style={{paddingLeft: '15px', paddingRight: '15px'}} className="navbar navbar-expand-lg navbar-dark bg-dark">
+            <nav style={{paddingLeft: '15px', paddingRight: '15px'}} 
+            className="navbar navbar-expand-lg navbar-dark bg-dark">
             <Link className="navbar-brand" to={"/"}>
                {1+1!==2 ? <i className="fas fa-home"  style={{color: 'white'}}></i> : <LogoSvg />}
             </Link>
@@ -69,29 +70,47 @@ class NavBarV2 extends React.Component{
 
             <div className={(this.state.showNav ? 'show' : '') + ' collapse navbar-collapse'} id="navbarSupportedContent">
                 <ul className="navbar-nav mr-auto">
-                <li className="nav-item active">
-                    <Link className="nav-link" to={"/"}  style={{color: 'white'}}>Home <span className="sr-only">(current)</span></Link>
-                </li>
-
-                <li className="nav-item dropdown">
-                    <a  style={{color: 'white'}} className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Menu
-                    </a>
-                    <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <Link className="dropdown-item" to={'/'}>Startseite</Link>
-                    {
-                        !window.localStorage.getItem('access_token') || !window.localStorage.getItem('refresh_token') 
-                        ? <Link to={'/user/authorization'} className="dropdown-item">Login</Link>
-                        : <Link to={'/user/current/profile/'} className="dropdown-item">Account</Link>
-                    
-                    }
-                    <div className="dropdown-divider"></div>
-                    <Link to={'/contact'} className="dropdown-item" href="#">Kontakt</Link>
-                    </div>
-                </li>
-                <li className="nav-item">
-                    <a  style={{color: 'rgba(170,170,170,.5)'}} className="nav-link disabled" href="#">{ !this.props.user_id ? '' : this.props.user_id}</a>
-                </li>
+                    <li className="nav-item dropdown">
+                        <a  style={{color: 'white'}} 
+                        className="nav-link dropdown-toggle" href="#" 
+                        id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Menu
+                        </a>
+                        <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <Link className="dropdown-item" to={'/'}>Startseite</Link>
+                        {
+                            !window.localStorage.getItem('access_token') || !window.localStorage.getItem('refresh_token') 
+                            ? <Link to={'/user/authorization'} className="dropdown-item">Login</Link>
+                            : <Link to={'/user/current/profile/'} className="dropdown-item">Account</Link>
+                        
+                        }
+                        <div className="dropdown-divider"></div>
+                        <Link to={'/contact'} className="dropdown-item" >Kontakt</Link>
+                        </div>
+                    </li>
+                    <li className="nav-item active">
+                        {
+                            !window.localStorage.getItem('access_token') || !window.localStorage.getItem('refresh_token') 
+                            ? <Link className="nav-link" to={'/user/authorization'} style={{color: 'white'}} > Login <span className="sr-only">(current)</span> </Link>
+                            : <Link className="nav-link" to={'/user/current/profile/'}  style={{color: 'white'}}> Profil <span className="sr-only">(current)</span></Link>
+                        
+                        }
+                    </li>
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/search/query/abstrakt">Abstrakt</Link>
+                    </li>
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/search/query/portrait">Portrait</Link>
+                    </li>
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/search/query/nature">Natur</Link>
+                    </li>
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/search/query/wallpaper">Background</Link>
+                    </li>
+                    <li className="nav-item">
+                        <a  style={{color: 'rgba(170,170,170,.5)'}} className="nav-link disabled" href="#">{ !this.props.user_id ? '' : this.props.user_id}</a>
+                    </li>
                 </ul>
                 <form className="form-inline my-2 my-lg-0" >
                     <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" 

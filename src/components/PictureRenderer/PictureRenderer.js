@@ -25,7 +25,7 @@ export default class PictureRend extends React.Component {
             )
         })
 
-        this.setState({ elements: this.elements })
+        this.setState({ elements: this.elements, loading: false })
         
     }
     loadMoreButton = () => {
@@ -91,7 +91,7 @@ export default class PictureRend extends React.Component {
                 <div className="container-user-info">
                     <Link to={'/user-profile/'+dataSet.user.username} style={{textDecoration: 'none', cursor: 'pointer'}}>
                         <img                      
-                            alt={dataSet.username}      
+                            alt={dataSet.user.name}      
                             id={uid}
                             src={dataSet.user.profile_image.medium}
                             width={'56px'}
@@ -189,19 +189,29 @@ ttps://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=
         let sty = {backgroundColor:'rgba(170,170,170,0)', backdropFilter:'blur(2px)'}
         return (
             <React.Fragment>
-                <div class="card bg-dark text-white"style={{borderRadius:'0'}}>
-                    <img class="card-img" src={'/sebastian-svenson-d2w-_1LJioQ-unsplash.jpg'} alt="Card logo callipson" />
-                    <div class="card-img-overlay" style={{borderRadius:'0'}}>
+                <div className="card bg-dark text-white"style={{borderRadius:'0', minHeight: '500px'}}>
+                    <img className="card-img" src={'/sebastian-svenson-d2w-_1LJioQ-unsplash (1).jpg'} alt="Card logo callipson" />
+                    <div className="card-img-overlay" style={{borderRadius:'0'}}>
                         <div class="jumbotron" style={sty}>
-                                <h1 class="display-4 text-light font-weight-bold">Callipson</h1>
-                                <hr class="my-4"/>
-                                <p class="lead text-white font-weight-light" style={{fontSize:'1rem'}}>This Application is powered by Unsplash</p>                                                                
+                                <h1 className="display-4 text-light font-weight-bold">Callipson</h1>
+                                <hr className="my-4"/>
+                                <p className="lead text-white font-weight-light" style={{fontSize:'1rem'}}>This Application is powered by Unsplash</p>                                                                
                         </div>
 
                     </div>
                 </div>
 
                 <br/>
+               
+                <div className="picture-container-main">
+                    
+                        { this.state.elements.length === 0 ? <Loader/> : this.state.elements.map( elem => elem )  }
+
+                        
+                </div>
+                    
+                { 
+                !this.state.loading ?
                 <div className="container text-white" style={{marginBottom: '30px', marginTop: '30px', backgroundColor: 'transparent'}}>
                     <div className="container bg-dark" style={{padding: '30px', borderRadius: '10px'}}>
                         <h5 className="text-center text-justify card-title mb-2 text-white font-weight-bold">
@@ -242,14 +252,8 @@ ttps://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=
                         
                     </div>
                 </div>
-                <div className="picture-container-main">
-                    
-                        { this.state.elements.length === 0 ? <Loader/> : this.state.elements.map( elem => elem )  }
-
-                        
-                </div>
-                    { this.loadMoreButton() }
-               
+                : <Loader></Loader> }
+                { this.loadMoreButton() }
             </React.Fragment>
         )
     }
