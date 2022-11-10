@@ -70,7 +70,7 @@ class PhotostatsClass extends React.Component {
                             >
                             </img>
                         </Link>
-                            <label htmmlFor={this.photo.id} className="profile-username-header">                            
+                            <label htmlFor={this.photo.id} className="profile-username-header">                            
                                 { this.photo.badge === undefined || null 
                                 ? this.photo.name 
                                 : this.photo.badge.slug === 'verified' 
@@ -90,8 +90,8 @@ class PhotostatsClass extends React.Component {
                         
                     
                     </div>
-                    <div class="card">
-                        <div class="card-body">
+                    <div className="card">
+                        <div className="card-body">
                             <h2 className="card-text text-center">Photo Trends</h2>
                         </div>
                     </div>
@@ -217,8 +217,8 @@ const RelatedPhotos = (props) => {
  
     return (
         <div style={{marginTop: '150px', backgroundColor: 'traparent'}} className="container-fluid fluid-width">
-            <div class="card">
-            <div class="card-body" >
+            <div className="card">
+            <div className="card-body" >
                 <p className="card-text text-center">Ähnliche Bilder</p>
             </div>
             </div>

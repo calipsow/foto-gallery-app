@@ -73,8 +73,8 @@ export default function DownloadButton(props){
                 > View on Unsplash </a>
             </label>
         </div>
-        <div className="btn-group" role="group" aria-label="Basic example" style={{marginLeft: '10px'}} onClick={ e => handleLikeEvent(e) }>
-            <button type="button" className="btn btn-secondary">
+        <div className="btn-group" role="group" aria-label="Basic example" style={{marginLeft: '0', borderRadius: '0'}} onClick={ e => handleLikeEvent(e) }>
+            <button type="button" className="btn btn-secondary" >
                     { 
                     liked 
                     ? <i className='fas fa-heart' style={{fontSize:'20px', color:'red'}}></i> 

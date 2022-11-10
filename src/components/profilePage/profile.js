@@ -122,6 +122,11 @@ class CurrentUserProfileClass extends React.Component {
                                 src={ this.userData.profile_image.large.split('/').includes('placeholder-avatars') ? '/icons8-name-64.svg' : this.userData.profile_image.large }
                                 width={'115px'} height={'115px'}
                                 style={{borderRadius: '100%'}}
+                                onError={ e => {
+                                    e.target.onError = null
+                                    e.target.src = '/david-pupaza-heNwUmEtZzo-unsplash.jpg'
+                                    e.target.alt = 'Failed to load Image'
+                                }}
                             >
                             </img>
                             <label htmmlFor={this.userData.id} className="profile-username-header text-light font-weight-bold">                            

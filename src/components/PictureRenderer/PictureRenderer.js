@@ -82,7 +82,11 @@ export default class PictureRend extends React.Component {
                         id={uid}
                         src={ dataSet.urls.small.split('&').includes('w=400') ? dataSet.urls.regular : dataSet.urls.small }
                         alt={ dataSet.user.name }    
-
+                        onError={ e => {
+                            e.target.onError = null
+                            e.target.src = '/david-pupaza-heNwUmEtZzo-unsplash.jpg'
+                            e.target.alt = 'Failed to load Image'
+                        }}
                         ></img>
                 </Link>
 
@@ -97,6 +101,11 @@ export default class PictureRend extends React.Component {
                             width={'56px'}
                             height={'56px'}
                             style={{cursor: 'pointer', borderRadius: '100%', border:'none'}}
+                            onError={ e => {
+                                e.target.onError = null
+                                e.target.src = '/david-pupaza-heNwUmEtZzo-unsplash.jpg'
+                                e.target.alt = 'Failed to load Image'
+                            }}
                         >                    
                         </img>
                         
@@ -189,13 +198,16 @@ ttps://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=
         let sty = {backgroundColor:'rgba(170,170,170,0)', backdropFilter:'blur(2px)'}
         return (
             <React.Fragment>
-                <div className="card bg-dark text-white"style={{borderRadius:'0', minHeight: '500px'}}>
+                <div className="card bg-dark text-white"style={{borderRadius:'0', minHeight: '100px'}}>
                     <img className="card-img" src={'/sebastian-svenson-d2w-_1LJioQ-unsplash (1).jpg'} alt="Card logo callipson" />
                     <div className="card-img-overlay" style={{borderRadius:'0'}}>
                         <div class="jumbotron" style={sty}>
-                                <h1 className="display-4 text-light font-weight-bold">Callipson</h1>
+                                <h1 className="display-4 text-light font-weight-normal">Callipson</h1>
                                 <hr className="my-4"/>
-                                <p className="lead text-white font-weight-light" style={{fontSize:'1rem'}}>This Application is powered by Unsplash</p>                                                                
+                                <blockquote className="blockquote">
+                                    <p className="mb-0 lead text-white font-weight-light lead" style={{fontSize:'1rem'}}>This Application is powered by Unsplash</p>                                                                
+
+                                </blockquote>
                         </div>
 
                     </div>

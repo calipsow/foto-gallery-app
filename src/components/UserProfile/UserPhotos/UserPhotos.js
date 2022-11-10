@@ -29,22 +29,38 @@ export default class UserPhotos extends React.Component {
         return (
             <div key={this.generateKey()}>
                                         
-            <p  style={{textAlign: 'center'}}>
-                <Link to={'/photo/statics/'+dataSet.id}><img className="rounded mx-auto d-block img-fluid" src={photoUrl} alt="image" 
-                width={ 'auto' } height={'auto'} style={{margin: '20px', maxWidth: '100%', height: 'auto'}}/></Link>
+            <p  style={{textAlign: 'center', marginBottom: '0'}}>
+                <Link to={'/photo/statics/'+dataSet.id}>
+                <img className="rounded mx-auto d-block img-fluid" src={photoUrl} alt={dataSet.alt_description || 'picture'} 
+                onError={ e => {
+                    e.target.onError = null
+                    e.target.src = '/david-pupaza-heNwUmEtZzo-unsplash.jpg'
+                    e.target.alt = 'Failed to load Image'
+                }}
+                width={ 'auto' } height={'auto'} style={{margin: '20px', marginBottom: '0', maxWidth: '100%', height: 'auto'}}/></Link>
                                 
             </p>
-            <LikeButton data={dataSet} /> 
+            
             <a className="btn-icons link-elem-icon"   
-                        onClick={ e => this.handleDownloadEvent(e) }
-                        href={dataSet.urls.small_s3}
+                        onClick={ e => this.handleDownloadEvent(e, dataSet.urls.small_s3) }
+                        href={ dataSet.urls.small_s3 }
                         target="_blank"
                         download                                                              
                         style={{cursor:'pointer', marginLeft: '0'}}
                     >
-                    <i className="fas fa-cloud-download-alt" id={dataSet.urls.small_s3} style={{color: 'white'}}></i>                                     
-                </a>
-
+            </a>
+            <div className="card" style={{marginTop: '0', backgroundColor: 'transparent', border: 'none'}}>
+                <div className="card-body" >
+                    <div className="container-fluid d-flex flex-row justify-content-between">
+                        <div onClick={ e => this.handleDownloadEvent(e, dataSet.urls.small_s3) } >
+                            <i className="fas fa-cloud-download-alt" id={dataSet.urls.small_s3} style={{color: 'black', fontSize:'22px', cursor:'pointer'}} ></i>                                     
+                        </div>
+                        <div>
+                            <LikeButton data={dataSet} />
+                        </div>
+                    </div>
+                </div> 
+            </div>
             </div>
         )
     }
@@ -63,12 +79,12 @@ export default class UserPhotos extends React.Component {
     }
 
      
-    handleDownloadEvent = (e) => {
+    handleDownloadEvent = (e, link) => {
         e.preventDefault();
         const key = this.generateKey();
 
 
-        fetch(e.target.id, {
+        fetch(link, {
             method: "GET",
             headers: {
                 'cors':'no-cors'
@@ -127,7 +143,7 @@ const LikeButton = (props) => {
 
 
     return (
-        <div onClick={e => handleLikeEvent(e)} >
+        <div onClick={e => handleLikeEvent(e)} className="card-link">
             { liked ? <i className="fas fa-heart" style={{fontSize:'26px'}}></i> : <i style={{fontSize:'26px'}} className="far fa-heart"></i> }
             
         </div>

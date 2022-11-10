@@ -34,22 +34,32 @@ export default class LikedPhotos extends React.Component {
     createElementImage = (url, alt, likes, dataSet) => {
         const k = this.generateKey()
         return(
-            
-            <p  key={k} style={{textAlign: 'center', margin: '15px'}}>
-                <Link to={'/photo/statics/'+dataSet.id} ><img id={k} className="rounded mx-auto d-block img-fluid" alt={alt} src={url} /> </Link>
-                <LikeButton data={dataSet} k={k} />
-                <a className="btn-icons link-elem-icon"     
-                        onClick={ e => this.handleDownloadEvent(e) }
-                        href={dataSet.urls.small_s3}
-                        target="_blank"
-                        download                                                              
-                        style={{cursor:'pointer'}}
-                    >
-                        <i className="fas fa-cloud-download-alt" id={dataSet.urls.small_s3} style={{color: 'white'}}></i>
-
-                     
-                </a> 
+            <div key={k} >
+            <p style={{textAlign: 'center', margin: '15px'}}>
+                <Link to={'/photo/statics/'+dataSet.id} ><img id={k} className="rounded mx-auto d-block img-fluid" alt={alt} src={url} 
+                onError={ e => {
+                    e.target.onError = null
+                    e.target.src = '/david-pupaza-heNwUmEtZzo-unsplash.jpg'
+                    e.target.alt = 'Failed to load Image'
+                }}
+                /> </Link>
             </p>
+
+            <div className="card" style={{marginTop: '0', backgroundColor: 'transparent', border: 'none'}}>
+                <div className="card-body" >
+                    <div className="container-fluid d-flex flex-row justify-content-between">
+                        <div onClick={ e => this.handleDownloadEvent(e, dataSet.urls.small_s3) } >
+                                <legend htmlFor={k}>
+                                    <i className="fas fa-cloud-download-alt" id={dataSet.urls.small_s3} style={{color: 'black', fontSize:'22px', cursor:'pointer'}} ></i>                                                             
+                                </legend>
+                            </div>
+                        <div>
+                            <LikeButton data={dataSet} k={k} />
+                        </div>
+                    </div>
+                </div> 
+            </div>
+            </div>
             
         )
     }
@@ -59,12 +69,12 @@ export default class LikedPhotos extends React.Component {
     }
 
  
-    handleDownloadEvent = (e) => {
+    handleDownloadEvent = (e, link) => {
         e.preventDefault();
         const key = this.generateKey();
 
 
-        fetch(e.target.id, {
+        fetch(link, {
             method: "GET",
             headers: {
                 'cors':'no-cors'
@@ -102,12 +112,10 @@ const LikeButton = (props) => {
     const [ liked, setLike ] = React.useState(props.data.liked_by_user)
     
    
-    let firstSet = true
 
 
     const handleLikeEvent = async (e) => {        
         e.preventDefault();
-        firstSet = false;
         setLike(!liked)
 
         if(!window.localStorage.getItem('access_token')){

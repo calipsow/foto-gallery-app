@@ -1,4 +1,5 @@
 import React from 'react';
+import * as ReactDOM from 'react-dom';
 import { useParams } from 'react-router-dom'
 import './SearchSite.css'
 import 'jquery/dist/jquery.min.js'; // Have to install and import jQuery because of bootstrap modal's dependency
@@ -31,18 +32,32 @@ class SearchSiteClass extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: true, success: null, loadingPage: 1, elements: [], temporarilyUrl: '/bastian-riccardi-PBTEeIadS20-unsplash.jpg', errorLoading: false
+            loading: true, success: null, loadingPage: 1, elements: [], temporarilyUrl: '/bastian-riccardi-PBTEeIadS20-unsplash.jpg', errorLoading: false, 
+            textDisplay: window.innerWidth < 500 ? false : true, failedLoadings: []
         }
         this.loadPages = 1
         this.data = []
         this.temporarilyUpdate = {}
         this.elements = []
         this.query = this.props.query
+  
     }
 
 
+    setSize = ( size ) => {
+        console.log('sized size', size)
+        if( size < 500 && this.state.textDisplay ){
+            this.setState({textDisplay: false})
+
+        } else if( size >= 500 && !this.state.textDisplay ) {
+            this.setState({textDisplay: true})
+        } 
+
+    }
+
     async componentDidMount(){
         window.scrollTo(0, 0)
+        window.addEventListener('resize', e => this.setSize(window.innerWidth) )
         this.data = await this.fetchDataQuery()
 
         if(this.data.total === 0 ){
@@ -99,18 +114,33 @@ class SearchSiteClass extends React.Component {
 
     createElementImage = (url, alt, likes, dataSet) => {
         const k = this.generateKey()
+        
         return(
-                <figure key={k} className="figure" style={{margin: 'auto'}}>
+            <div key={k} className="card" style={{border: 'none', backgroundColor: 'transparent', margin: 'auto'}}>
+                <figure className="figure responsive-mobile" id={k} >
                     <Link to={'/photo/statics/'+dataSet.id}> 
-                    <img id={k} className="rounded mx-auto d-block img-fluid" alt={alt} src={url} /></Link>
-                    <figcaption class="figure-caption">
                         
-                        <Link style={{textDecoration: 'none', color: 'black', fontWeight: 'bold'}} 
-                        to={'/user-profile/'+dataSet.user.username}>{dataSet.user.username.toUpperCase()}</Link>
-                        <LikeButtons k={k} data={dataSet} />
-                    </figcaption>
-    
-                </figure>
+                        <img id={k} className="mx-auto d-block img-fluid card-img-top" alt={alt} src={url} 
+                        onError={ e => {
+                            e.target.onError = null
+                            e.target.src = '/david-pupaza-heNwUmEtZzo-unsplash.jpg'
+                            e.target.alt = 'Failed to load Image'
+                        }} />
+                        
+                    </Link>
+
+                    
+                        <div class="card-body">
+                            <figcaption class="figure-caption">
+                                
+                                <Link style={{textDecoration: 'none', color: 'black', fontWeight: 'bold'}} 
+                                to={'/user-profile/'+dataSet.user.username}>{dataSet.user.username.toUpperCase()}</Link>
+                                <LikeButtons k={k} data={dataSet} />
+                            </figcaption>
+                        </div>
+                   
+                </figure> 
+                </div>
         )
     }
 
@@ -184,9 +214,9 @@ class SearchSiteClass extends React.Component {
         })
         if(!arr[0]){ 
             let str = data.alt_description || data.description || data.user.bio || data.user.location || data.user.username
-            return (<p class="lead text-white font-weight-light" style={style}>{str}</p>)
+            return (<p style={this.state.textDisplay ? {mixBlendMode: 'different'} : {display: 'none'}} className="card-text text-white font-weight-light" >{str}</p>)
         }
-        return (<p class="lead text-white font-weight-light" style={style}>{arr[0]}</p>)
+        return (<p style={this.state.textDisplay ? {mixBlendMode: 'different'} : {display: 'none'}} className={"card-text text-white font-weight-light"} >{arr[0]}</p>)
     }
 
     render() {
@@ -196,35 +226,34 @@ class SearchSiteClass extends React.Component {
 
             <React.Fragment>
                 <NavBar />
-                <div className="card bg-dark text-white"style={{borderRadius:'0', minHeight: '350px'}}>
+                <div className="card bg-dark text-white"style={{borderRadius:'0', minHeight: '100px'}}>
                     { 
                         !this.state.errorLoading ? 
-                        <img className="card-img" src={this.temporarilyUpdate.url} alt={this.temporarilyUpdate.alt} 
+                        <img className="card-img" style={{borderRadius:'0'}} src={this.temporarilyUpdate.url} alt={this.temporarilyUpdate.alt} 
                         onError={e => this.handleError(e) }
                         />
                         : 
-                        <img class="card-img" src={this.state.temporarilyUrl} alt={this.temporarilyUpdate.alt} 
+                        <img class="card-img" style={{borderRadius:'0'}} src={this.state.temporarilyUrl} alt={this.temporarilyUpdate.alt} 
                         onError={e => this.handleError(e) }
                         />                    
                     }
 
-                    <div className="card-img-overlay" style={{borderRadius:'0'}}>
-                    <div className="jumbotron" style={sty}>
-                        <h1 className="display-4 font-weight-normal text-white">{ !this.state.loading ? this.props.query.toUpperCase().replace(/[-]/g, ' ') : '' }</h1>
-                        <hr class="my-4"/>
-                        <p class="lead text-white font-weight-bold" style={textBlendStyle}>{
-                        !this.state.loading && this.state.success ?
-                        this.temporarilyUpdate.data.user.name 
-                        :this.state.loading ? '' : !this.state.loading && this.state.success === false ? 'Sorry, there are no Pictures' : '' }
-                        </p>
-                        { 
-                        !this.state.loading && this.state.success ?
-                        this.getDescription(this.temporarilyUpdate.data, textBlendStyle)
-                        : this.state.loading ? '' : !this.state.loading && this.state.success === false ? 'We coudnt find any Pictures..' : ''
-                        }                       
-                    </div>
+                <div class="card-img-overlay" style={{backgroundColor:'rgba(32,32,32,.4)', backdropFilter: 'blur(3px)', borderRadius:'0'}}>
+                    <h1 className="card-title font-weight-normal text-white">{ !this.state.loading ? this.props.query.toUpperCase().replace(/[-]/g, ' ') : '' }</h1>
+                    <hr class="my-4"/>
+                    <p class="card-text text-white font-weight-bold" style={textBlendStyle}>{
 
-                    </div>
+                    !this.state.loading && this.state.success ?
+                    this.temporarilyUpdate.data.user.name 
+                    :this.state.loading ? '' : !this.state.loading && this.state.success === false ? 'Sorry, there are no Pictures' : '' }
+                    </p>
+                    { 
+                    !this.state.loading && this.state.success ?
+                    this.getDescription(this.temporarilyUpdate.data, textBlendStyle)
+                    : this.state.loading ? '' : !this.state.loading && this.state.success === false ? 'We coudnt find any Pictures..' : ''
+                    } 
+                       
+                </div>
                 </div>
 
 
@@ -299,10 +328,10 @@ const LikeButtons = (props) => {
 
     return (
         <>
-        <legend  htmmlfor={props.k}><b>{props.data.likes+'    '}</b>
+        <legend  htmlFor={props.k}><b>{props.data.likes+'    '}</b>
             {
-                liked ? <i onClick={e => handleLikeEvent(e) } className="fas fa-heart" style={{cursor:'pointer'}}></i> 
-                : <i onClick={e => handleLikeEvent(e) } style={{cursor:'pointer'}} className="far fa-heart"></i> 
+                liked ? <i onClick={e => handleLikeEvent(e) }><i className="fas fa-heart" style={{cursor:'pointer'}}></i></i> 
+                : <i onClick={e => handleLikeEvent(e) }><i  style={{cursor:'pointer'}} className="far fa-heart"></i></i> 
             }       
             <a className="btn-icons" rel="noreferrer" href={props.data.links.html} target="_blank" style={{color: 'black', marginLeft: '50px'}}>                 
                 {<i className="fa fa-link" style={{color: 'white'}}></i>}
