@@ -92,8 +92,7 @@ class NavBarV2 extends React.Component{
                         {
                             !window.localStorage.getItem('access_token') || !window.localStorage.getItem('refresh_token') 
                             ? <Link className="nav-link" to={'/user/authorization'} style={{color: 'white'}} > Login <span className="sr-only">(current)</span> </Link>
-                            : <Link className="nav-link" to={'/user/current/profile/'}  style={{color: 'white'}}> Profil <span className="sr-only">(current)</span></Link>
-                        
+                            : <Link className="nav-link" to={'/user/current/profile/'}  style={{color: 'white'}}>{window.localStorage.getItem('user_name')}<span className="sr-only">(current)</span></Link>                        
                         }
                     </li>
                     <li className="nav-item">

@@ -27,13 +27,16 @@ export default function DownloadButton(props){
         window.open(e.target.href);
     }
 
-    const triggerDownloaded = (e) => {
-
-
+    const triggerDownloaded = async (e) => {
         e.preventDefault();
         const key = generateKey();
         
-        fetch(props.data.urls.small_s3, {
+        let url = await fetch(props.data.links.download_location+'&client_id=eya3GQorzQDbuRMRdnxRXH3I7qHaWNoGfuC_yIgNmEk')
+        .then( response => response.json())
+        .then(response => response.url)
+        .catch(err => {console.log(err.message); return null})
+
+        fetch(url, {
             method: "GET",
             headers: {
                 'cors':'no-cors'

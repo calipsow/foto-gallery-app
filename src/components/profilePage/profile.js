@@ -1,7 +1,5 @@
 import React from 'react';
 import {
-    Routes,
-    Route,
     Link,
     useNavigate,
 } from 'react-router-dom';
@@ -21,7 +19,7 @@ export default function CurrentUserProfile(){
     React.useEffect(()=>{
         if( !access_token || !refresh_token ){            
             navigate('/user/authorization')
-        }
+        } 
     },[])
 
     return (
@@ -67,7 +65,7 @@ class CurrentUserProfileClass extends React.Component {
     async componentDidMount(){
         this.userData = await this.fetchCurrentUserProfile()
         this.stats = await this.fetchData()
-
+        window.localStorage.setItem( 'user_name', this.userData.username )
         this.setState({loading: false})
     }
     handleLogout = (e) => {

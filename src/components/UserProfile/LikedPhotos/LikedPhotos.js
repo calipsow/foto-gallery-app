@@ -48,7 +48,7 @@ export default class LikedPhotos extends React.Component {
             <div className="card" style={{marginTop: '0', backgroundColor: 'transparent', border: 'none'}}>
                 <div className="card-body" >
                     <div className="container-fluid d-flex flex-row justify-content-between">
-                        <div onClick={ e => this.handleDownloadEvent(e, dataSet.urls.small_s3) } >
+                        <div onClick={ e => this.handleDownloadEvent(e, dataSet) } >
                                 <legend htmlFor={k}>
                                     <i className="fas fa-cloud-download-alt" id={dataSet.urls.small_s3} style={{color: 'black', fontSize:'22px', cursor:'pointer'}} ></i>                                                             
                                 </legend>
@@ -69,12 +69,15 @@ export default class LikedPhotos extends React.Component {
     }
 
  
-    handleDownloadEvent = (e, link) => {
+    handleDownloadEvent = async (e, data) => {
         e.preventDefault();
         const key = this.generateKey();
+        let url = await fetch(data.links.download_location+'&client_id=eya3GQorzQDbuRMRdnxRXH3I7qHaWNoGfuC_yIgNmEk')
+        .then(response => response.json())
+        .then(response => response.url)
+        .catch(err => {console.log(err.message); return null})
 
-
-        fetch(link, {
+        fetch(url, {
             method: "GET",
             headers: {
                 'cors':'no-cors'

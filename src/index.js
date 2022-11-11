@@ -11,6 +11,7 @@ import Error404 from './components/404/404Page';
 import Photostats from './components/PictureStatistics/PhotoStats';
 import LoginUser from './components/login/Login';
 import CurrentUserProfile from './components/profilePage/profile';
+import RedirectPage from './components/login/RedirectPage';
 
 // import LoginUser from './components/login/Login';
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -23,8 +24,9 @@ root.render(
         <Route path={'search/query/:query'}  element={<SearchSite />} />
         <Route path={'contact'} element={<ContactComponent />} />
         <Route path={'photo/statics/:photo_id'} element={<Photostats />} />
-        <Route path={'user/authorization'} element={<LoginUser/>} />
+        <Route path={'user/authorization/:success'} element={<LoginUser/>} />
         <Route path={'user/current/profile/'} element={<CurrentUserProfile />} />
+        <Route path={'user/auth/redirect'} element={<RedirectPage />} />
         <Route path={'*'} element={<Error404 />} />
       </Routes>
     </Router>

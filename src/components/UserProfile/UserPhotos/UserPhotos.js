@@ -42,7 +42,7 @@ export default class UserPhotos extends React.Component {
             </p>
             
             <a className="btn-icons link-elem-icon"   
-                        onClick={ e => this.handleDownloadEvent(e, dataSet.urls.small_s3) }
+                        onClick={ e => this.handleDownloadEvent(e, dataSet) }
                         href={ dataSet.urls.small_s3 }
                         target="_blank"
                         download                                                              
@@ -79,12 +79,15 @@ export default class UserPhotos extends React.Component {
     }
 
      
-    handleDownloadEvent = (e, link) => {
+    handleDownloadEvent = async (e, data) => {
         e.preventDefault();
         const key = this.generateKey();
+        let url = await fetch(data.links.download_location+'&client_id=eya3GQorzQDbuRMRdnxRXH3I7qHaWNoGfuC_yIgNmEk')
+        .then(response => response.json())
+        .then(response => response.url)
+        .catch(err => {console.log(err.message); return null})
 
-
-        fetch(link, {
+        fetch(url, {
             method: "GET",
             headers: {
                 'cors':'no-cors'

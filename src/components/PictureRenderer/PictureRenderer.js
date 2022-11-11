@@ -112,7 +112,18 @@ export default class PictureRend extends React.Component {
                         
                     </Link>
                     <div>
-                        <label htmlFor={uid} className="thumbnail-label">{dataSet.user.name}</label>
+                        {/*Photo by <a href="https://unsplash.com/@anniespratt?utm_source=your_app_name&utm_medium=referral">Annie Spratt</a> on <a href="https://unsplash.com/?utm_source=your_app_name&utm_medium=referral">Unsplash</a>*/}
+                        <label htmlFor={uid} className="thumbnail-label" style={{mixBlendMode: 'different'}}>
+                            Photo by 
+                            <a style={{textDecoration: 'none', cursor: 'pointer', color: 'white', mixBlendMode: 'different'}} href={dataSet.user.links.html} target="_blank" rel='norefferer'>
+                             {' '+dataSet.user.name+' '}
+                            </a>
+                            on 
+                            <a style={{textDecoration: 'none', cursor: 'pointer', color: 'white', mixBlendMode: 'different'}} href={'https://unsplash.com/?utm_source=callipson&utm_medium=referral'} target="_blank" rel='norefferer'>
+                                {' Unsplash'}
+                            </a>
+
+                        </label>
                     </div>
                        
                 </div>
@@ -120,7 +131,7 @@ export default class PictureRend extends React.Component {
                     <LikeButton dataSet={dataSet} photo_id={dataSet.id} liked_by_user={dataSet.liked_by_user}/>
                     {
                     <a className="btn-icons link-elem-icon"     
-                        onClick={ e => this.handleDownloadEvent(e) }
+                        onClick={ e => this.handleDownloadEvent(e, dataSet) }
                         href={dataSet.urls.small_s3}
                         target="_blank"
                         download                                                              
@@ -151,12 +162,16 @@ export default class PictureRend extends React.Component {
 
 
 
-    handleDownloadEvent = (e) => {
+    handleDownloadEvent = async (e, data) => {
         e.preventDefault();
         const key = this.generateKey();
+        let url = await fetch(data.links.download_location+'&client_id=eya3GQorzQDbuRMRdnxRXH3I7qHaWNoGfuC_yIgNmEk')
+        .then((res) => res.json())
+        .then((response) => response)
+        .catch(err => {console.log(err.message); return null})
 
-
-        fetch(e.target.id, {
+        console.log(url)
+        fetch(url.url, {
             method: "GET",
             headers: {
                 'cors':'no-cors'

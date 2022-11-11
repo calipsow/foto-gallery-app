@@ -1,5 +1,4 @@
 import React from 'react';
-import * as ReactDOM from 'react-dom';
 import { useParams } from 'react-router-dom'
 import './SearchSite.css'
 import 'jquery/dist/jquery.min.js'; // Have to install and import jQuery because of bootstrap modal's dependency
@@ -280,31 +279,25 @@ class SearchSiteClass extends React.Component {
 }
 
 
-const LikeButtons = (props) => {
-    const navigate = useNavigate()
-    const [ liked, setLike ] = React.useState(props.data.liked_by_user)
-    
-    const handleLikeEvent = async (e) => {        
-        e.preventDefault();
-        setLike(!liked)
+function LikeButtons(props){
 
-        if(!window.localStorage.getItem('access_token')){
-            navigate('/user/authorization')
-
-        } else {
-            await Like({photo_id: props.data.id, token: window.localStorage.getItem('access_token'), liked: liked})                    
-        }
-    } 
     const generateKey = () => {
         const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
         return s4() + s4() + '-' + s4() + '-' + new Date().getTime();
     }
 
-    const handleDownloadEvent = (e) => {
+    const handleDownloadEvent = async (e, data) => {
         e.preventDefault();
         const key = generateKey();    
+        console.log( data.links.download_location+'&client_id=eya3GQorzQDbuRMRdnxRXH3I7qHaWNoGfuC_yIgNmEk' )
 
-        fetch(e.target.id, {
+        let url = await fetch(data.links.download_location+'&client_id=eya3GQorzQDbuRMRdnxRXH3I7qHaWNoGfuC_yIgNmEk')
+        .then(response => response.json())
+        .then(response => response )
+        .catch(err => {console.log(err.message); return null })
+
+
+        fetch(url.url, {
             method: "GET",
             headers: {
                 'cors':'no-cors'
@@ -328,16 +321,16 @@ const LikeButtons = (props) => {
 
     return (
         <>
+        
         <legend  htmlFor={props.k}><b>{props.data.likes+'    '}</b>
-            {
-                liked ? <i onClick={e => handleLikeEvent(e) }><i className="fas fa-heart" style={{cursor:'pointer'}}></i></i> 
-                : <i onClick={e => handleLikeEvent(e) }><i  style={{cursor:'pointer'}} className="far fa-heart"></i></i> 
-            }       
+
+            <LikeElems data={props.data}/>                        
+  
             <a className="btn-icons" rel="noreferrer" href={props.data.links.html} target="_blank" style={{color: 'black', marginLeft: '50px'}}>                 
                 {<i className="fa fa-link" style={{color: 'white'}}></i>}
             </a>         
             <a className="btn-icons link-elem-icon"     
-                onClick={ e => handleDownloadEvent(e) }
+                onClick={ e => handleDownloadEvent(e, props.data) }
                 href={props.data.urls.small_s3}
                 target="_blank"
                 download               
@@ -347,6 +340,34 @@ const LikeButtons = (props) => {
                 <i className="fas fa-cloud-download-alt" id={props.data.urls.small_s3} style={{color: 'white'}}></i>                     
             </a>
         </legend>
+        </>
+    )
+}
+
+const LikeElems = (props) => {
+    const navigate = useNavigate()
+    const [ liked, setLike ] = React.useState(props.data.liked_by_user)
+    let icon = liked ? "fas fa-heart" : "far fa-heart"
+
+    const handleLikeEvent = async (e) => {  
+        icon = liked ? "far fa-heart" : "fas fa-heart"      
+        setLike( !liked )
+
+        if(!window.localStorage.getItem('access_token')){
+            navigate('/user/authorization')
+
+        } else {
+            await Like({photo_id: props.data.id, token: window.localStorage.getItem('access_token'), liked: liked})                                
+        }
+    } 
+
+    return (
+        <>
+        {             
+        <i onClick={e => handleLikeEvent()} key={new Date().getTime()}>            
+            <span className={icon} style={{cursor:'pointer'}} ></span>        
+        </i>
+        }
         </>
     )
 }
