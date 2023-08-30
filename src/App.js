@@ -9,21 +9,14 @@ export default class App extends React.Component {
     this.content=[]; 
     this.state={ loading: true, elements: [] } 
   }
-
-
-
-
   render() {  
     return(
       <>
         <NavBar />
-
         <div className="app-container">
             <PictureRend />
             <FooterComponent />
         </div>
-        
-
       </>
     )
   }
