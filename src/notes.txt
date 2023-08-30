@@ -1,6 +1,1 @@
-bad word api key = y3HiB2iVKaZUFoYhL9F2WBYp3e94Shjz
-Redirect_uri = urn:ietf:wg:oauth:2.0:oob
-authorization = 9IlIJJD5Bi03VfSkoMJT6HpX1b271DjkErtu3PoQV6U
 
-access_token = oslDwzrJbCFc_Ir9uq-Gthr9gFu9Ti_6jF4rKxz8tJs
-refresh_token = oQ_wPYU7DvG1KZWPXnQDfOHm6abcrZeWqAD-xF9Nr_E
