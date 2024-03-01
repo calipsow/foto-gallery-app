@@ -10,7 +10,7 @@ them in an appealing user interface.
 - **React Framework**: The application is built with the popular JavaScript framework, ReactJS, renowned for its efficiency and flexibility.
 
 ## Installation and Usage:
-### You need to run this app also the backend server, make sure the Server is running. <a href="https://github.com/calipsow/picture-app-backend">View Server</a>
+### You need to run this app also the backend server, make sure the Server is running. <a href="https://github.com/calipsow/Picture_App_Backend">View Server</a>
 
 1. Clone the repository to your local computer.
 2. Install the necessary dependencies using `npm install`.
